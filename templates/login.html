@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="format-detection" content="telephone=no">
+	<title>EDEN App - Log In</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="/static/layout.css"/>
+	<link rel="stylesheet" type="text/css" href="/static/heading.css"/>
+	<link rel="stylesheet" type="text/css" href="/static/login.css"/>
+	<style type="text/css">
+		.hidden {display:none;}
+	</style>
+	<script language="javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script language="javascript">
+		$('html').addClass('hidden');
+    	$(window).on('load', function () {
+			$('html').show();
+    	});  
+   	</script>
+	
+	<link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+</head>
+
+<body>
+	<div class="heading_2">
+		<div>
+			<span>Log In</span>
+		</div>
+	</div>
+
+	<div id="scrollable">
+        <div id="form_box">
+            <form action="/login" method="POST">
+                <div id="form_text_box">
+                    <div id="username">
+                        <input autocomplete="off" autofocus name="username" placeholder="Username / Email" type="text" {% if username %}value={{ username }}{% endif %} required>
+                    </div>
+                    <div id="password">
+                        <input id="last_input" name="password" placeholder="Password" type="password" {% if password %}value={{ password }}{% endif %} required>
+                    </div>
+                </div>
+                {% if password %}
+                <text id="incorrect">Your login or password is incorrect.</text>
+                {% endif %}
+                <button id="login_button" type="submit">Log In</button>
+            </form>
+        </div>
+        
+        <a href="/sign-up">
+            <div id="register_button_box" class="button_box">
+                <span class="button_text">Sign Up</span>
+            </div>
+        </a>
+	</div>
+
+    <script language="javascript">
+        function set_space() {
+            var element = document.getElementById("last_input");
+            var height =  element.offsetHeight;
+
+            console.log(`calc(${{height}}px + 4 * min(40px, 2vw) * 2 / 3)`);
+            document.getElementById("form_text_box").style.height = "calc(" + height + "px + 4 * min(40px, 2vw) * 2 / 3)";
+        }
+
+        set_space();
+
+        $(window).resize(function() {
+            set_space();
+        });
+
+        window.addEventListener("load", () => {
+			set_space();
+		});
+    </script>
+</body> 

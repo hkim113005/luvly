@@ -1,0 +1,326 @@
+#scrollable {
+	overflow: auto;
+
+    z-index: 4;
+}
+
+.practice_box {
+	position: absolute;
+	overflow: visible;
+
+	z-index: 4;
+}
+
+.practice_text_box {
+	fill: transparent;
+	overflow: visible;
+	width: calc((min(9.5vw, 200px) * 5 + min(9.5vw, 200px)) / 3 - (min(9.5vw, 200px) * 1 / 8 + 10px) / 2);
+	max-width: calc((min(9.5vw, 200px) * 5 + min(9.5vw, 200px)) / 3 - (min(9.5vw, 200px) * 1 / 8 + 10px) / 2);
+	height: calc(min(9.5vw + 20px, 200px) * 1 / 2 * 1);
+	border-style: solid;
+	border-radius: min(2.5vw, 25px);
+	border-width: calc(min(3px, 0.15vw) + min(4px, 0.2vw));
+	border-color: transparent;
+	word-break: break-all;
+	word-wrap: break-word;
+
+	box-sizing: border-box;
+
+	vertical-align: middle;
+	line-height: min(1vw, 20px);
+
+	overflow: auto;
+	
+	z-index: 4;
+
+	background-color: rgba(240, 240, 240, 0.7);
+}
+
+.practice_text_box:hover {
+	background-color: rgba(230, 230, 230, 0.6);
+}
+
+.practice_first {
+	position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+
+	text-align: left;
+	font-family: Inter;
+	font-style: normal;
+	font-weight: bold;
+	font-size: min(35px, 1.75vw);
+	color: rgba(0,0,0,1);
+    word-break: break-word;
+
+    z-index: 4;
+}
+
+.test_box {
+	position: absolute;
+	overflow: visible;
+
+	z-index: 4;
+}
+
+.test_text_box {
+	fill: transparent;
+	overflow: visible;
+	width: calc((min(9.5vw, 200px) * 5 + min(9.5vw, 200px)) / 3 - (min(9.5vw, 200px) * 1 / 8 + 10px) / 2);
+	max-width: calc((min(9.5vw, 200px) * 5 + min(9.5vw, 200px)) / 3 - (min(9.5vw, 200px) * 1 / 8 + 10px) / 2);
+	height: calc(min(9.5vw + 20px, 200px) * 1 / 2 * 1);
+	border-style: solid;
+	border-radius: min(2.5vw, 25px);
+	border-width: calc(min(3px, 0.15vw) + min(4px, 0.2vw));
+	border-color: transparent;
+	word-break: break-all;
+	word-wrap: break-word;
+
+	box-sizing: border-box;
+
+	vertical-align: middle;
+	line-height: min(1vw, 20px);
+
+	overflow: auto;
+	
+	z-index: 4;
+
+	background-color: rgba(240, 240, 240, 0.7);
+}
+
+.test_text_box:hover {
+	background-color: rgba(230, 230, 230, 0.6);
+}
+
+.test_first {
+	position: absolute;
+    left: 50%;
+    top: 50%;
+	transform: translate(-50%, -50%);
+
+	text-align: left;
+	font-family: Inter;
+	font-style: normal;
+	font-weight: bold;
+	font-size: min(35px, 1.75vw);
+	color: rgba(0,0,0,1);
+    word-break: break-word;
+
+    z-index: 4;
+}
+
+.problems_box {
+	position: absolute;
+	overflow: visible;
+
+	z-index: 4;
+}
+
+.problems_text_box {
+	fill: transparent;
+	overflow: visible;
+	width: calc((min(9.5vw, 200px) * 5 + min(9.5vw, 200px)) / 3 - (min(9.5vw, 200px) * 1 / 8 + 10px) / 2);
+	max-width: calc((min(9.5vw, 200px) * 5 + min(9.5vw, 200px)) / 3 - (min(9.5vw, 200px) * 1 / 8 + 10px) / 2);
+	height: calc(min(9.5vw + 20px, 200px) * 1 / 2 * 1);
+	border-style: solid;
+	border-radius: min(2.5vw, 25px);
+	border-width: calc(min(3px, 0.15vw) + min(4px, 0.2vw));
+	border-color: transparent;
+	word-break: break-all;
+	word-wrap: break-word;
+
+	box-sizing: border-box;
+
+	vertical-align: middle;
+	line-height: min(1vw, 20px);
+
+	overflow: auto;
+	
+	z-index: 4;
+
+	background-color: rgba(240, 240, 240, 0.7);
+}
+
+.problems_text_box:hover {
+	background-color: rgba(230, 230, 230, 0.6);
+}
+
+.problems_first {
+	position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+
+	text-align: left;
+	font-family: Inter;
+	font-style: normal;
+	font-weight: bold;
+	font-size: min(35px, 1.75vw);
+	color: rgba(0,0,0,1);
+    word-break: break-word;
+
+    z-index: 4;
+}
+
+.subunit_box {
+	position: absolute;
+	overflow: visible;
+
+    z-index: 4;
+}
+
+.subunit_text_box {
+	fill: transparent;
+	overflow: visible;
+	width: calc(min(9.5vw, 200px) * 5 + min(9.5vw, 200px));
+	max-width: calc(min(9.5vw, 200px) * 5 + min(9.5vw, 200px));
+	height: calc(min(9.5vw + 20px, 200px) * 1 / 2);
+	border-style: solid;
+	border-radius: min(2.5vw, 25px);
+	border-width: calc(min(3px, 0.15vw) + min(4px, 0.2vw));
+	border-color: transparent;
+	word-break: break-all;
+	word-wrap: break-word;
+
+	box-sizing: border-box;
+
+	vertical-align: middle;
+	line-height: min(1vw, 20px);
+
+	overflow: auto;
+	
+	z-index: 4;
+
+	background-color: rgba(240, 240, 240, 0.7);
+}
+
+.subunit_text_box:hover {
+	background-color: rgba(230, 230, 230, 0.6);
+}
+
+.subunit_first {
+    position: absolute;
+    left: 0px;
+    top: 50%;
+    transform: translate(calc((min(9.5vw + 20px, 200px) * 1 / 4) / 2), calc(-50% - min(10px, 0.5vw)));
+
+	text-align: left;
+	font-family: Inter;
+	font-style: normal;
+	font-weight: bold;
+	font-size: min(35px, 1.75vw);
+	color: rgba(0,0,0,1);
+    word-break: break-word;
+
+    z-index: 4;
+}
+
+.subunit_second {
+    position: absolute;
+    left: 0px;
+    bottom: 50%;
+    transform: translate(calc((min(9.5vw + 20px, 200px) * 1 / 4) / 2), calc((min(9.5vw + 20px, 200px) * 1 / 4) / 2 + min(5px, 0.25vw)));
+
+	text-align: left;
+	font-family: Inter;
+	font-style: normal;
+	font-weight: 600;
+	font-size: min(18px, 0.9vw);
+	color: rgba(0,0,0,1);
+	white-space: nowrap;
+	width: calc(min(9.5vw, 200px) * 5 + min(9.5vw, 200px) - (min(9.5vw + 20px, 200px) * 1 / 4) * 2 - min(7.125vw, 150px) * 2 - (min(9.5vw + 20px, 200px) * 1 / 4) / 2);
+	overflow-x: scroll;
+
+    z-index: 4;
+
+	overflow-x: scroll;
+    overflow-y: hidden;
+
+	-ms-overflow-style: none;  /* IE and Edge */
+ 	scrollbar-width: none;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.subunit_second::-webkit-scrollbar {
+	display: none;
+}
+
+.button_box {
+	position: absolute;
+	overflow: visible;
+
+    z-index: 4;
+}
+
+#practice_button_box {
+	top: 50%;
+	right: 0px;
+	transform: translate(calc((min(9.5vw + 20px, 200px) * 1 / 4) * (-1) - min(7.125vw, 150px)), -50%);
+
+    z-index: 4;
+}
+
+.button_text_box {
+	fill: transparent;
+	overflow: visible;
+	width: min(7.125vw, 150px);
+	height: calc(min(9.5vw + 20px, 200px) * 1 / 4);
+	border-style: none;
+	border-radius: min(2.5vw, 25px);
+	border-width: min(3px, 0.15vw);
+	border-color: rgba(0,0,0,1);
+	word-break: break-all;
+    word-wrap: break-word;
+
+	box-sizing: border-box;
+
+	vertical-align: middle;
+    line-height: min(1vw, 20px);
+
+    overflow: auto;
+
+    z-index: 4;
+
+	background-color: rgba(140, 140, 140, 0.1);
+}
+
+.button_text_box:hover {
+    border-style:  none;
+
+    outline-style: solid;
+    outline-width: min(3px, 0.15vw);
+    outline-color: rgba(140, 140, 140, 0.1);
+}
+
+.button_text {
+    position: absolute;
+	overflow: visible;
+    top: 50%;
+	left: 50%;
+    transform: translate(-50%, -50%);
+	text-align: left;
+	font-family: Inter;
+	font-style: normal;
+	font-weight: bold;
+	font-size: min(25px, 1.25vw);
+	color: rgba(0,0,0,1);
+    word-break: keep-all;
+
+    z-index: 4;
+}
+
+
+#test_button_box {
+	top: 50%;
+	right: 0px;
+	transform: translate(calc((min(9.5vw + 20px, 200px) * 1 / 4) / (-2)), -50%);
+
+    z-index: 4;
+}
+
+/*
+.True {
+	border-color: var(--A_color);
+}
+*/

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="format-detection" content="telephone=no">
+	<title>Luvly</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="/static/layout.css"/>
+	{% block stylesheets %}{% endblock %}
+	<style type="text/css">
+		.hidden {display:none;}
+	</style>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script language="javascript">
+		$('html').addClass('hidden');
+    	$(window).on('load', function () {
+			$('html').show();
+    	});  
+   	</script>
+   	
+	<link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+</head>
+
+<body style="visibility: hidden">
+	<div class="header">
+		<div id="EDEN">
+			<a id="eden_link" href="/">
+				<img id="logo" src="{{ url_for('static', filename='images/logo_1.png') }}">
+			</a>
+		</div>
+		<div id="username_link" class="user_link">
+			<a href="/users/{{ user_id }}">{{ username }}</a>
+		</div>
+	</div>	
+
+	<div class="menu">
+		<div id="home" class="home_link">
+			<a href="/">Home</a>
+		</div>
+		<div id="search" class="menu_link">
+			<a href="/search">Search</a>
+		</div>
+		<div id="practice" class="menu_link">
+			<a href="/practice">Practice</a>
+		</div>
+	</div>
+
+	{% block main %}{% endblock %}
+
+	<script>
+		document.body.style.visibility = "visible";
+	</script>
+</body>

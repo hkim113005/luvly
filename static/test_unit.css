@@ -1,0 +1,384 @@
+#problem_box {
+	position: absolute !important;
+    top: calc(min(200px, 15vw) + min(50px, 3vw) * 2.5);
+    left: 50%;
+    transform: translate(-50%, 0%);
+	overflow: visible;
+}
+
+
+#problem_text_box {
+	fill: transparent;
+	overflow: visible;
+	width: calc(min(9.5vw, 200px) * 5 + min(9.5vw, 200px));
+   	max-width: calc(min(9.5vw, 200px) * 5 + min(9.5vw, 200px));
+	border-style: none;
+	border-width: min(3px, 0.15vw);
+	border-color: rgba(0,0,0,1);
+    border-radius: min(2.5vw, 25px);
+	word-break: break-all;
+    word-wrap: break-word;
+
+	box-sizing: border-box;
+
+	vertical-align: middle;
+    line-height: min(1vw, 20px);
+
+    overflow: auto;
+
+    padding: min(40px, 2vw) 0;
+
+    background-color: rgba(240, 240, 240, 0.7);
+}
+
+#result_box {
+	position: absolute !important;
+    top: calc(min(200px, 15vw) + min(50px, 3vw) * 2.5);
+    left: 50%;
+    transform: translate(-50%, 0%);
+	overflow: visible;
+}
+
+#result_text_box {
+	fill: transparent;
+	overflow: visible;
+	width: calc(min(9.5vw, 200px) * 5 + min(9.5vw, 200px));
+   	max-width: calc(min(9.5vw, 200px) * 5 + min(9.5vw, 200px));
+    height: calc(min(9.5vw + 20px, 200px) * 1 / 2 + min(160px, 12vw) + min(50px, 2.5vw) - min(25px, 1.25vw));
+	border-style: solid;
+	border-radius: min(2.5vw, 25px);
+	border-width: calc(min(3px, 0.15vw) + min(4px, 0.2vw));
+	border-color: transparent;
+	word-break: break-all;
+    word-wrap: break-word;
+
+	box-sizing: border-box;
+
+	vertical-align: middle;
+    line-height: min(1vw, 20px);
+
+    overflow: auto;
+
+    padding: min(40px, 2vw) 0;
+
+    background-color: rgba(240, 240, 240, 0.7);
+}
+
+.result_first {
+	position: absolute;
+    left: 50%;
+    top: calc(min(9.5vw + 20px, 200px) * 1 / 2);
+	transform: translate(-50%, -50%);
+
+	text-align: left;
+	font-family: Inter;
+	font-style: normal;
+	font-weight: bold;
+	font-size: min(70px, 3.50vw);
+	color: rgba(0,0,0,1);
+    word-break: break-word;
+
+    z-index: 4;
+}
+
+#question_box {
+    margin: 0 auto min(80px, 4vw)  auto;
+}
+
+#question {
+    font-size: min(25px, 1.25vw);
+}
+
+
+.answer_box {
+    margin: min(20px, 1vw) auto 0 auto;
+    border-style:  solid;
+    border-width: calc(min(3px, 0.15vw) + min(4px, 0.2vw));
+	border-radius: min(2.5vw, 25px);
+    border-color: transparent;
+
+    background-color: rgba(140, 140, 140, 0.1);
+}
+
+.answer_box:hover {
+    border-color: var(--answer_box_border_color);
+}
+
+.answer_box_selected {
+    border-color: rgba(0, 0, 255, 1) !important;
+}
+
+.answer_box_safari {
+    margin: min(20px, 1vw) auto 0 auto;
+    border-style:  solid;
+    border-width: calc(min(3px, 0.15vw) + min(4px, 0.2vw));
+	border-radius: min(2.5vw, 25px);
+    border-color: transparent;
+
+    background-color: rgba(140, 140, 140, 0.1);
+}
+
+.answer_box_safari:hover {
+    border-color: var(--answer_box_border_color);
+}
+
+.answer_box_selected_safari {
+    border-color: rgba(0, 0, 255, 1) !important;
+}
+
+
+#answer_a {
+    font-size: min(25px, 1.25vw);
+}
+
+#answer_b {
+    font-size: min(25px, 1.25vw);
+}
+
+#answer_c {
+    font-size: min(25px, 1.25vw);
+}
+
+#answer_d {
+    font-size: min(25px, 1.25vw);
+}
+
+#answer_e {
+    font-size: min(25px, 1.25vw);
+}
+
+
+#answer_selection {
+    display: none;
+}
+
+#submit_button {
+    position: absolute;
+    transform: translate(-50%, min(40px, 2vw));
+    left: 50%;
+
+    border-color: transparent;
+    border-style: none;
+    border-width: calc(min(3px, 0.15vw));
+    border-radius: min(2.5vw, 25px);
+
+    text-align: center;
+	font-family: Inter;
+	font-style: normal;
+	font-weight: bold;
+	font-size: min(25px, 1.25vw);
+	color: rgba(0,0,0,1);
+    word-break: keep-all;
+
+    width: min(7.125vw, 150px);
+	height: calc(min(9.5vw + 20px, 200px) * 1 / 4);
+
+    background-color: rgba(240, 240, 240, 0.7);
+}
+
+#submit_button:hover {
+    background-color: rgba(230, 230, 230, 0.6);
+}
+
+#retest_button {
+    position: absolute;
+    transform: translate(-50%, min(40px, 2vw));
+    left: 50%;
+
+    border-color: transparent;
+    border-style: none;
+    border-width: calc(min(3px, 0.15vw));
+    border-radius: min(2.5vw, 25px);
+
+    text-align: center;
+	font-family: Inter;
+	font-style: normal;
+	font-weight: bold;
+	font-size: min(25px, 1.25vw);
+	color: rgba(0,0,0,1);
+    word-break: keep-all;
+
+    width: min(7.125vw, 150px);
+	height: calc(min(9.5vw + 20px, 200px) * 1 / 4);
+
+    background-color: rgba(240, 240, 240, 0.7);
+}
+
+#retest_button:hover {
+    background-color: rgba(230, 230, 230, 0.6);
+}
+
+.correct {
+    border-color: var(--A_color) !important;
+}
+
+.incorrect {
+    border-color: var(--F_color) !important;
+}
+
+
+#solution_button {
+    position: absolute;
+    transform: translate(calc(-100% - min(40px, 2vw) / 2), calc(min(40px, 2vw)));
+    left: 50%;
+
+    border-color: rgba(0,0,0,1);
+    border-style: none;
+    border-width: min(3px, 0.15vw);
+    border-radius: min(2.5vw, 25px);
+
+    text-align: center;
+	font-family: Inter;
+	font-style: normal;
+	font-weight: bold;
+	font-size: min(25px, 1.25vw);
+	color: rgba(0,0,0,1);
+    word-break: keep-all;
+
+    width: min(7.125vw, 150px);
+	height: calc(min(9.5vw + 20px, 200px) * 1 / 4);
+
+    background-color: rgba(240, 240, 240, 0.7);
+}
+
+#solution_button:hover {
+    background-color: rgba(230, 230, 230, 0.6);
+}
+
+
+#next_button {
+    position: absolute;
+    transform: translate(calc(0% + min(40px, 2vw) / 2), min(40px, 2vw));
+    left: 50%;
+
+    border-color: rgba(0,0,0,1);
+    border-style: none;
+    border-width: min(3px, 0.15vw);
+    border-radius: min(2.5vw, 25px);
+
+    text-align: center;
+	font-family: Inter;
+	font-style: normal;
+	font-weight: bold;
+	font-size: min(25px, 1.25vw);
+	color: rgba(0,0,0,1);
+    word-break: keep-all;
+
+    width: min(7.125vw, 150px);
+	height: calc(min(9.5vw + 20px, 200px) * 1 / 4);
+
+    background-color: rgba(240, 240, 240, 0.7);
+}
+
+#next_button:hover {
+    background-color: rgba(230, 230, 230, 0.6);
+}
+
+#complete_button {
+    position: absolute;
+    transform: translate(calc(0% + min(40px, 2vw) / 2), min(40px, 2vw));
+    left: 50%;
+
+    border-color: rgba(0,0,0,1);
+    border-style: none;
+    border-width: min(3px, 0.15vw);
+    border-radius: min(2.5vw, 25px);
+
+    text-align: center;
+	font-family: Inter;
+	font-style: normal;
+	font-weight: bold;
+	font-size: min(25px, 1.25vw);
+	color: rgba(0,0,0,1);
+    word-break: keep-all;
+
+    width: min(7.125vw, 150px);
+	height: calc(min(9.5vw + 20px, 200px) * 1 / 4);
+
+    background-color: rgba(240, 240, 240, 0.7);
+}
+
+#complete_button:hover {
+    background-color: rgba(230, 230, 230, 0.6);
+}
+
+.dot {
+    position: absolute;
+	left: 50%;
+	top: min(200px, 15vw);
+	text-align: left;
+	font-family: Inter;
+	font-style: normal;
+	font-weight: bolder;
+	font-size: min(50px, 3vw);
+	color: rgba(0,0,0,1);
+	word-wrap: break-word;
+
+	z-index: 4;
+    height: min(25px, 1.25vw);
+    width: min(25px, 1.25vw);
+    background-color: rgba(140, 140, 140, 0.1);
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.result_dot {
+    position: absolute;
+	left: 50%;
+	top: min(160px, 12vw);
+	text-align: left;
+	font-family: Inter;
+	font-style: normal;
+	font-weight: bolder;
+	font-size: min(50px, 3vw);
+	color: rgba(0,0,0,1);
+	word-wrap: break-word;
+
+	z-index: 4;
+    height: min(50px, 2.5vw);
+    width: min(50px, 2.5vw);
+    background-color: rgba(140, 140, 140, 0.1);
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.correct_tracker {
+    background-color: var(--A_color) !important;
+}
+
+.incorrect_tracker {
+    background-color: var(--F_color) !important;
+}
+
+img {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+
+    max-width: calc(min(9.5vw, 200px) * 5 + min(9.5vw, 200px) - 2 * min(40px, 2vw));
+}
+
+.grade_A {
+    color: var(--A_color);
+    border-color: var(--A_color) !important;
+}
+
+.grade_B {
+    color: var(--B_color);
+    border-color: var(--B_color) !important;
+}
+
+.grade_C {
+    color: var(--C_color);
+    border-color: var(--C_color) !important;
+}
+
+.grade_D {
+    color: var(--D_color);
+    border-color: var(--D_color) !important;
+}
+
+.grade_F {
+    color: var(--F_color);
+    border-color: var(--F_color) !important;
+}

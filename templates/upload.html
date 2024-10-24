@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="format-detection" content="telephone=no">
+	<title>EDEN App - Upload</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="/static/layout.css"/>
+	<link rel="stylesheet" type="text/css" href="/static/upload.css"/>
+	<style type="text/css">
+		.hidden {display:none;}
+	</style>
+	<script language="javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script language="javascript">
+		$('html').addClass('hidden');
+    	$(window).on('load', function () {
+			$('html').show(); 
+    	});  
+   	</script>
+	<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+	<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+	
+	<link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+</head>
+
+<body>
+    <div class="heading_2">
+		<div>
+			<span>Upload</span>
+		</div>
+	</div>
+
+	<div id="scrollable">
+        <div id="form_box">
+            <form action="/upload" method="POST" enctype="multipart/form-data">
+                    <div id="form_text_box">
+                        <div id="title">
+                            <input autocomplete="off" autofocus name="title" placeholder="Title" type="text" required>
+                        </div>
+                        <div id="credit">
+                            <input autocomplete="off" autofocus name="credit" placeholder="Credit(s)" type="text" required>
+                        </div>
+                        <div id="course">
+                            <select id="course_select" name="course" required onchange="update_units()">
+                                <option style="font-family: Inter" value="" selected disabled>Course</option>
+                                {% for course in courses %}
+                                <option style="font-family: Inter" value="{{ course[0] }}">{{ course[2] }} {{ course[1] }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div id="unit">
+                            <select id="unit_select" name="unit" required onchange="update_subunits()">
+                                <option style="font-family: Inter" value="" selected disabled>Unit</option>
+                            </select>
+                        </div>
+                        <div id="subunit">
+                            <select id="subunit_select" name="subunit" required>
+                                <option style="font-family: Inter" value="" selected disabled>Subunit</option>
+                            </select>
+                        </div>
+                        <label id="file">
+                            <input name="file" type="file" accept=".pdf" required onchange="change_file_name(this)">
+                            <div id="file_name">Select File</div>
+                        </label>
+                    </div>
+                    <button id="upload_button" type="submit">Upload</button>
+            </form>
+        </div>
+	</div>
+
+    <script language="javascript">
+        function change_file_name(target) {
+            document.getElementById("file_name").innerHTML = target.files[0].name;
+        }
+
+        function update_units() {
+            fetch("/get_units/" + document.getElementById("course_select").value)
+            .then(function (response) {
+                return response.json();
+            }).then(function (data) {
+                var unit_select = document.getElementById("unit_select");
+                var units = data.units;
+                while (unit_select.options.length > 1) {
+                    unit_select.remove(1);
+                }
+                for (var i = 0; i < units.length; i++) {
+                    var option = document.createElement('option');
+                    option.value = units[i][2];
+                    option.innerHTML = "Unit " + parseInt(units[i][2]) + " - " + units[i][4];
+                    unit_select.appendChild(option);
+                }
+                unit_select.selectedIndex = 0;
+
+                var subunit_select = document.getElementById("subunit_select");
+                while (subunit_select.options.length > 1) {
+                    subunit_select.remove(1);
+                }
+                subunit_select.selectedIndex = 0;
+            });
+        }
+
+        function update_subunits() {
+            console.log("A");
+            fetch("/get_subunits/" + document.getElementById("course_select").value + "/" + document.getElementById("unit_select").value)
+            .then(function (response) {
+                return response.json();
+            }).then(function (data) {
+                var subunit_select = document.getElementById("subunit_select")
+                var subunits = data.subunits;
+                while (subunit_select.options.length > 1) {
+                    subunit_select.remove(1);
+                }
+                for (var i = 0; i < subunits.length; i++) {
+                    var option = document.createElement('option');
+                    option.value = subunits[i][3];
+                    option.innerHTML = "Unit " + parseInt(subunits[i][2]) + "." + parseInt(subunits[i][3]) + " - " + subunits[i][5];
+                    subunit_select.appendChild(option);
+                }
+                subunit_select.selectedIndex = 0;
+            });
+        }
+
+        function set_space() {
+            var element = document.getElementById("file");
+            var height =  element.offsetHeight;
+
+            document.getElementById("form_text_box").style.height = "calc(" + height + "px + 12 * min(40px, 2vw) * 2 / 3)";
+
+            document.getElementById("scrollable").style = `
+                overflow: auto;
+	               
+                height: calc(${document.getElementById("form_box").offsetHeight}px + (min(200px, 15vw) + min(50px, 3vw)) * 2);
+
+                z-index: 4;
+            `;
+        }
+
+        set_space();
+
+        $(window).resize(function() {
+            set_space();
+        });
+
+        window.addEventListener("load", () => {
+			set_space();
+		});
+    </script>
+</body> 

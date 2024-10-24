@@ -1,0 +1,79 @@
+#scrollable {
+	overflow: auto;
+	
+	z-index: 4;
+}
+
+.course_box {
+	position: absolute;
+	overflow: visible;
+
+	z-index: 4;
+}
+
+
+.course_text_box {
+	fill: transparent;
+	overflow: auto;
+	width: min(9.5vw, 200px);
+   	max-width: min(9.5vw, 200px);
+	height: calc(min(9.5vw, 200px) * 3 / 2);
+	border-style: solid;
+	border-radius: min(2.5vw, 25px);
+	border-width: calc(min(3px, 0.15vw) + min(4px, 0.2vw));
+	border-color: transparent;
+	word-break: break-word;
+
+	box-sizing: border-box;
+
+	vertical-align: bottom;
+
+	z-index: 4;
+
+	background-color: rgba(240, 240, 240, 0.7);
+}
+
+.course_text_box:hover {
+	background-color: rgba(230, 230, 230, 0.6);
+}
+
+.course_first {
+	position: absolute;
+    left: 0px;
+    top: 0px;
+    transform: translate(calc(min(40px, 2vw) * 2 / 3), calc(min(40px, 2vw) * 2 / 3));
+
+	text-align: left;
+	font-family: Inter;
+	font-style: normal;
+	font-weight: bold;
+	font-size: min(50px, 2.5vw);
+	color: rgba(0,0,0,1);
+	word-break: break-word;
+
+	z-index: 4;
+}
+
+.course_second {
+	position: absolute;
+    left: 0px;
+    top: 0px;
+    transform: translate(calc(min(40px, 2vw) * 2 / 3), calc(min(50px, 2.5vw) * 5 / 3));
+	width: calc(min(9.5vw, 200px) - min(40px, 2vw) * 4 / 3);
+
+	text-align: left;
+	font-family: Inter;
+	font-style: normal;
+	font-weight: bold;
+	font-size: min(24px, 1.2vw);
+	color: rgba(0,0,0,1);
+	word-break: break-word;
+
+	z-index: 4;
+}
+
+/*
+.True {
+	border-color: var(--A_color);
+}
+*/

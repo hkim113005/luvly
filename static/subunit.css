@@ -1,0 +1,103 @@
+.js .accordion:nth-child(n+1) { display: none }
+
+#scrollable {
+	overflow: auto;
+}
+
+.problem_box {
+	position: absolute !important;
+	overflow: visible;
+}
+
+
+.problem_text_box {
+	fill: transparent;
+	overflow: visible;
+	width: calc(min(9.5vw, 200px) * 5 + min(9.5vw, 200px));
+	max-width: calc(min(9.5vw, 200px) * 5 + min(9.5vw, 200px));
+	height: calc(min(9.5vw + 20px, 200px) * 1 / 2);
+	border-style: solid;
+	border-radius: min(2.5vw, 25px);
+	border-width: calc(min(3px, 0.15vw) + min(4px, 0.2vw));
+	border-color: transparent;
+	word-break: break-all;
+	word-wrap: break-word;
+
+	box-sizing: border-box;
+
+	vertical-align: middle;
+	line-height: min(1vw, 20px);
+
+	overflow: auto;
+
+	background-color: rgba(240, 240, 240, 0.7);
+}
+
+.problem_text_box:hover {
+	background-color: rgba(230, 230, 230, 0.6);
+}
+
+
+.problem_text {
+    position: absolute;
+    left: 0px;
+    top: 50%;
+    transform: translate(calc((min(9.5vw + 20px, 200px) * 1 / 4) / 2), -50%);
+
+	text-align: left;
+	font-family: Inter;
+	font-style: normal;
+	font-weight: bold;
+	font-size: min(30px, 1.5vw);
+	color: rgba(0,0,0,1);
+    word-break: break-word;
+}
+
+
+#pagination {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, +50%);
+
+    text-align: left;
+	font-family: Inter;
+	font-style: normal;
+	font-weight: bold;
+	font-size: min(30px, 1.5vw);
+	color: rgba(0,0,0,1);
+    word-break: break-word;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pagination-number, .pagination-button{
+    text-align: center;
+	font-family: Inter;
+	font-style: normal;
+	font-weight: bold;
+	font-size: min(30px, 1.5vw);
+	color: rgba(0,0,0,1);
+    word-break: break-word;
+    background-color: transparent;
+    border: none;
+    margin: 0.25rem 0.25rem;
+    cursor: pointer;
+
+    border-radius: .2rem;
+}
+
+.pagination-number.active {
+    color: #fff;
+    background: rgba(0, 0, 0, 1);
+}
+
+
+.CORRECT {
+	border-color: var(--A_color);
+}
+
+.INCORRECT {
+	border-color: var(--F_color);
+}

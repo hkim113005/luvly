@@ -1,0 +1,127 @@
+{% extends "layout.html" %}
+
+{% block title %}
+	{{ name }}
+{% endblock %}
+
+{% block stylesheets %}
+	<link rel="stylesheet" type="text/css" href="/static/unit.css"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% endblock %}
+
+{% block main %}
+    <a href="{{ back }}">
+        <div class="back_button">
+            <span>< Back</span>
+        </div>
+    </a>
+
+    <div id="heading" class="heading_1">
+        <div>
+            <span>{{ name }}</span>
+        </div>
+    </div>
+
+    <div id="scrollable" style="height: calc(min(9.5vw, 200px) * 1 / 2 * {{ rows }} + (min(9.5vw, 200px) * 1 / 8 + 10px) * {{ rows - 1 }} + 7 / 4 * (min(200px, 15vw) + min(50px, 3vw) * 5 / 2));">
+        <a href="/practice/{{ url_name }}/{{ unit }}">
+            <div class="practice_box" id="practice_option">
+                <div class="practice_text_box">
+                    <span class="practice_first">Practice</span>
+                </div>
+            </div>
+        </a>
+
+        <a href="/test/{{ url_name }}/{{ unit }}">
+            <div class="test_box" id="test_option">
+                <div class="test_text_box">
+                    <span class="test_first">Test</span>
+                </div>
+            </div>
+        </a>
+
+        <a href="/problems/{{ url_name }}/{{ unit }}">
+            <div class="problems_box" id="problems_option">
+                <div class="problems_text_box">
+                    <span class="problems_first">Problems</span>
+                </div>
+            </div>
+        </a>
+
+        {% for i in range(length) %}
+        <a href="{{ subunits[i][0] }}">
+            <div id="subunit_box_{{ i + 1 }}" class="subunit_box">
+                <div id="subunit_text_box_{{ i + 1 }}" class="subunit_text_box {{ subunits[i][1] }}">
+                    <span class="subunit_first">Unit {{ unit + "." + subunits[i][0] }}</span>
+                    <span class="subunit_second">{{ units[i][5] }}</span>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+	</div>
+
+    <script language="javascript">
+        function set_space() {
+            var element = document.getElementById("heading");
+            var height =  element.offsetHeight
+            var font_size = parseInt(window.getComputedStyle(element).fontSize);
+            var lines = Math.floor(height / font_size);
+            var line_height = parseInt(parseInt(window.getComputedStyle(element).height) / lines);
+
+            for (var i = 1; i <= {{ length }}; i++) {
+                var box =  document.getElementById("subunit_box_" + i);
+                var stylesheet = `
+                    top: calc(min(200px, 15vw) + min(50px, 3vw) * 1 + min(9.5vw + 20px, 200px) * 1 / 2 * 1 + min(9.5vw, 200px) * 1 / 4 * 2);
+                    left: 50%;
+                    transform: translate(-50%, calc((min(9.5vw, 200px) * 1 / 2 + min(9.5vw, 200px) * 1 / 8 + 10px) * ${i - 1} + ${(lines - 1) * line_height}px));
+                    z-index: 4;
+                `;
+                box.style = stylesheet;
+            }
+
+            var rows = {{ rows }};
+
+            var scroll = document.getElementById("scrollable");
+            var stylesheet = `
+                overflow: auto;
+                height: calc(min(9.5vw, 200px) * 1 / 2 * ${rows} + (min(9.5vw, 200px) * 1 / 8 + 10px) * ${ rows - 1 } + 6 / 4 * (min(200px, 15vw) + min(50px, 3vw) * 5 / 2) +  ${(lines - 1) * line_height}px + min(9.5vw + 20px, 200px) * 1 / 2 * 1 + min(9.5vw, 200px) * 1 / 4);
+                z-index: 4;
+            `;
+            scroll.style = stylesheet;
+
+            var practice = document.getElementById("practice_option");
+            stylesheet = `
+                top: calc(min(200px, 15vw) + min(50px, 3vw) * 2 + min(9.5vw + 20px, 200px) * 1 / 2 * 0);
+                left: 50%;
+                transform: translate(calc(-50% - (min(9.5vw, 200px) * 5 + min(9.5vw, 200px)) / 3 - (min(9.5vw, 200px) * 1 / 8 + 10px) / 4), calc((min(9.5vw, 200px) * 1 / 2 + min(9.5vw, 200px) * 1 / 8 + 10px) * 0 + ${(lines - 1) * line_height}px));
+                z-index: 4;
+            `;
+            practice.style = stylesheet;
+
+            var test = document.getElementById("test_option");
+            stylesheet = `
+                top: calc(min(200px, 15vw) + min(50px, 3vw) * 2 + min(9.5vw + 20px, 200px) * 1 / 2 * 0);
+                left: 50%;
+                transform: translate(-50%, calc((min(9.5vw, 200px) * 1 / 2 + min(9.5vw, 200px) * 1 / 8 + 10px) * 0 + ${(lines - 1) * line_height}px));
+                z-index: 4;
+            `;
+            test.style = stylesheet;
+
+            var problems = document.getElementById("problems_option");
+            stylesheet = `
+                top: calc(min(200px, 15vw) + min(50px, 3vw) * 2 + min(9.5vw + 20px, 200px) * 1 / 2 * 0);
+                left: 50%;
+                transform: translate(calc(-50% + (min(9.5vw, 200px) * 5 + min(9.5vw, 200px)) / 3 + (min(9.5vw, 200px) * 1 / 8 + 10px) / 4), calc((min(9.5vw, 200px) * 1 / 2 + min(9.5vw, 200px) * 1 / 8 + 10px) * 0 + ${(lines - 1) * line_height}px));
+                z-index: 4;
+            `;
+            problems.style = stylesheet;
+        }
+
+        $(window).resize(function() {
+            set_space();
+        });
+
+        window.addEventListener("load", () => {
+			set_space();
+		});
+    </script>
+{% endblock %}

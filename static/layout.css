@@ -1,0 +1,207 @@
+:root {
+	--A_color: rgb(44, 228, 116);
+	--B_color: rgb(205, 240, 59);
+	--C_color: rgb(254, 229, 1);
+	--D_color: rgb(255, 151, 1);
+	--F_color: rgb(255, 57, 36);
+}
+
+body {
+	zoom: 80%;
+}
+
+#logo {
+	height: min(40px, 3vw);
+}
+
+#EDEN {
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	overflow: visible;
+	white-space: nowrap;
+	color: rgba(0, 0, 0, 1);
+
+	padding-right: 100%;
+	padding-left: calc(min(50px, 3vw));
+	padding-top: min(56px, 3.36vw);
+	padding-bottom: min(56px, 3.36vw);
+
+	z-index: 1;
+}
+
+#username_link {
+	position: fixed;
+	right: min(50px, 3vw);
+	top: min(56px, 3.36vw);
+	overflow: visible;
+    text-align: right;
+    vertical-align: middle;
+
+	z-index: 2;
+}
+
+#home {
+	position: fixed;
+    left: 50%;
+    bottom: min(30px, calc(1vw));
+	transform: translate(-50%, 0%); 
+	overflow: visible;
+    text-align: center;
+    vertical-align: bottom;
+
+	padding-top: 15px;
+	padding-bottom: calc(15px);
+	padding-left: 30%;
+	padding-right: 30%;
+
+	border-radius: 25px;
+
+	background-color: rgba(240, 240, 240, 0.7);
+
+	z-index: 998;
+}
+
+#search {
+	position: fixed;
+	left: 70%;
+	bottom: min(30px, calc(1vw));
+	transform: translate(-50%, 0%); 
+	overflow: visible;
+    text-align: left;
+    vertical-align: bottom;
+
+	padding: 15px;
+	padding-right: 25px;
+	padding-bottom: calc(15px);
+
+	z-index: 999;
+}
+
+
+#practice {
+	position: fixed;
+	left: 30%;
+	bottom: min(30px, calc(1vw));  
+	transform: translate(-50%, 0%);  
+	overflow: visible;
+    text-align: right;
+    vertical-align: bottom;
+
+	padding: 15px;
+	padding-left: 25px;
+	padding-bottom: calc(15px);
+
+	z-index: 999;
+}
+
+.user_link {
+	position: fixed;
+	overflow: visible;
+	white-space: nowrap;
+	text-align: center;
+	vertical-align: middle;
+	font-family: Inter;
+	font-style: normal;
+	font-weight: bold;
+	font-size: min(40px, 3vw);
+	color: rgba(0, 0, 0, 1);
+}
+
+.home_link {
+	position: fixed;
+	overflow: visible;
+	white-space: nowrap;
+	text-align: center;
+	vertical-align: bottom;
+	font-family: Inter;
+	font-style: normal;
+	font-weight: bold;
+	font-size: min(40px, 3vw);
+	color: rgba(0, 0, 0, 1);
+}
+
+.menu_link {
+	position: fixed;
+	overflow: visible;
+	white-space: nowrap;
+	text-align: center;
+	vertical-align: bottom;
+	font-family: Inter;
+	font-style: normal;
+	font-weight: bold;
+	font-size: min(40px, 3vw);
+	color: rgba(0, 0, 0, 1);
+}
+
+#EDEN a:link, a:visited {
+	color: rgba(0, 0, 0, 1);
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.user_link a:link, a:visited {
+	color: rgba(0, 0, 0, 1);
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.home_link a:link, a:visited {
+	color: rgba(0, 0, 0, 1);
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.menu_link a:link, a:visited {
+	color: rgba(0, 0, 0, 1);
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.heading_1 {
+    position: absolute;
+	left: 50%;
+	width: calc(min(9.5vw, 200px) * 5 + min(9.5vw, 200px));
+	transform: translate(-50%, 0);
+	top: min(200px, 15vw);
+	text-align: left;
+	font-family: Inter;
+	font-style: normal;
+	font-weight: bolder;
+	font-size: min(50px, 3vw);
+	color: rgba(0,0,0,1);
+	word-wrap: break-word;
+
+	z-index: 4;
+}
+
+.heading_2 {
+    position: absolute;
+	left: calc(50% - (2 * min(9.5vw, 200px) + min(40px, 2vw) * 2 / 3 * 2.5) / 2);
+	width: calc(min(9.5vw, 200px) * 5 + min(9.5vw, 200px));
+	top: calc(min(200px, 15vw) - min(50px, 3vw));
+	text-align: left;
+	font-family: Inter;
+	font-style: normal;
+	font-weight: bolder;
+	font-size: min(50px, 3vw);
+	color: rgba(0,0,0,1);
+	word-wrap: break-word;
+
+	z-index: 4;
+}
+
+.back_button {
+	position: absolute;
+	left: 50%;
+	width: calc(min(9.5vw, 200px) * 5 + min(9.5vw, 200px));
+	transform: translate(-50%, 0);	top: min(170px, 12.75vw);
+	text-align: left;
+	font-family: Inter;
+	font-style: normal;
+	font-weight: bolder;
+	font-size: min(16px, 1vw);
+	color: rgba(0,0,0,1);
+
+	z-index: 4;
+}

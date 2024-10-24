@@ -1,0 +1,92 @@
+{% extends "layout.html" %}
+
+{% block title %}
+	{{ name }}
+{% endblock %}
+
+{% block stylesheets %}
+	<link rel="stylesheet" type="text/css" href="/static/course.css"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% endblock %}
+
+{% block main %}
+    <a href="{{ back }}">
+        <div class="back_button">
+            <span>< Back</span>
+        </div>
+    </a>
+
+    <div id="heading" class="heading_1">
+        <div>
+            <span>{{ name }}</span>
+        </div>
+    </div>
+
+    <div id="scrollable" style="height: calc(min(9.5vw, 200px) * {{ rows }} + min(9.5vw, 200px) * {{ rows - 1 }} / 4 + 7 / 4 * (min(200px, 15vw) + min(50px, 3vw) * 5 / 2));">
+        {% for i in range(length) %}
+		<a href="{{i + 1}}">
+			<div id="unit_box_{{i + 1}}" class="unit_box">
+				<div id="unit_text_box_{{ i + 1 }}" class="unit_text_box {{ test_results[i] }}">
+                    <span class="unit_first">Unit {{ i + 1 }}</span>
+                    <span class="unit_second">{{ units[i][4] }}</span>
+				</div>
+			</div>
+		</a>
+        {% endfor %}
+	</div>
+
+    <script language="javascript">
+        function set_space() {
+            var element = document.getElementById("heading");
+            var height =  element.offsetHeight
+            var font_size = parseInt(window.getComputedStyle(element).fontSize);
+            var lines = Math.floor(height / font_size);
+            var line_height = parseInt(parseInt(window.getComputedStyle(element).height) / lines);
+
+            for (var i = 1; i <= {{ length }}; i++) {
+                var box =  document.getElementById("unit_box_" + i);
+                var stylesheet = `
+                    z-index: 4;
+                    top: calc(min(200px, 15vw) + min(50px, 3vw) * 2);
+                    left: 50%;`;
+                if (i % 5 == 1) {
+                    stylesheet += "\ntransform: translate(-300%, ";
+                }
+                else if (i % 5 == 2) {
+                    stylesheet += "\ntransform: translate(-175%, ";
+                }
+                else if (i % 5 == 3) {
+                    stylesheet += "\ntransform: translate(-50%, ";
+                }
+                else if (i % 5 == 4) {
+                    stylesheet += "\ntransform: translate(75%, ";
+                }
+                else if (i % 5 == 0) {
+                    stylesheet += "\ntransform: translate(200%, ";
+                }
+                stylesheet += "calc((min(9.5vw, 200px) * 3 / 2 + min(9.5vw, 200px) / 4) * " + (Math.floor((i - 1) / 5)) + " + " + ((lines - 1) * line_height) + "px));";
+                box.style = stylesheet;
+            }
+
+            var rows = {{ rows }};
+
+            var scroll = document.getElementById("scrollable");
+            var stylesheet = `
+                overflow: auto;
+                height: calc(min(9.5vw, 200px) * 3 / 2 * ${rows} + (min(9.5vw, 200px) * 1 / 8 + 10px) * ${ rows - 1 } + 6 / 4 * (min(200px, 15vw) + min(50px, 3vw) * 5 / 2) +  ${(lines - 1) * line_height}px);
+            `;
+
+            scroll.style = stylesheet;
+        }
+
+        set_space();
+
+        $(window).resize(function() {
+            set_space();
+        });
+
+        window.addEventListener("load", () => {
+			set_space();
+		});
+    </script>
+{% endblock %}

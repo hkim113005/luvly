@@ -1,0 +1,294 @@
+#scrollable {
+	overflow: auto;
+	
+	z-index: 4;
+}
+
+#form_box {
+	position: absolute;
+	overflow: visible;
+
+    top: calc(min(200px, 15vw) + min(50px, 3vw) * 1);
+    left: 50%;
+    transform: translate(-50%, calc((min(9.5vw, 200px) * 3 / 2 + min(9.5vw, 200px) / 4) * 0));
+
+	z-index: 4;
+}
+
+
+#form_text_box {
+	fill: transparent;
+	overflow: auto;
+	width: calc(2 * min(9.5vw, 200px) + min(40px, 2vw) * 2 / 3 * 2.5);
+	border-style: none;
+	border-radius: min(2.5vw, 25px);
+	border-width: min(3px, 0.15vw);
+	border-color: rgba(245, 245, 245, 1);
+	word-break: break-word;
+
+	box-sizing: border-box;
+
+	vertical-align: bottom;
+
+	z-index: 4;
+
+	background-color: rgba(240, 240, 240, 0.7);
+}
+
+input[type="text"]
+{
+    text-align: left;
+	font-family: Inter;
+	font-style: normal;
+	font-weight: bold;
+	font-size: min(20px, 1vw);
+	color: rgba(0, 0, 0, 1);
+    word-break: break-word;
+
+    border-radius: min(2.5vw, 25px);
+    border-style: none;
+
+    padding: min(0.3vw, 6px) min(0.5vw, 10px);
+
+    width: calc(2 * min(9.5vw, 200px));
+
+    display: block;
+}
+
+input[type="email"]
+{
+    text-align: left;
+	font-family: Inter;
+	font-style: normal;
+	font-weight: bold;
+	font-size: min(20px, 1vw);
+	color: rgb(0, 0, 0);
+    word-break: break-word;
+
+    border-radius: min(2.5vw, 25px);
+    border-style: none;
+
+    padding: min(0.3vw, 6px) min(0.5vw, 10px);
+
+    width: calc(2 * min(9.5vw, 200px));
+
+    display: block;
+}
+
+input[type="date"]
+{
+    text-align: left;
+	font-family: Inter;
+	font-style: normal;
+	font-weight: bold;
+	font-size: min(20px, 1vw);
+	color: rgb(0, 0, 0);
+    word-break: break-word;
+
+    border-radius: min(2.5vw, 25px);
+    border-style: none;
+
+    padding: min(0.3vw, 6px) min(0.5vw, 10px);
+
+    width: calc(2 * min(9.5vw, 200px));
+
+    display: block;
+}
+
+input[type="number"]
+{
+    text-align: left;
+	font-family: Inter;
+	font-style: normal;
+	font-weight: bold;
+	font-size: min(20px, 1vw);
+	color: rgba(0, 0, 0, 1);
+    word-break: break-word;
+
+    border-radius: min(2.5vw, 25px);
+    border-style: none;
+    
+    padding: min(0.3vw, 6px) min(0.5vw, 10px);
+
+    width: calc(2 * min(9.5vw, 200px));
+
+    display: block;
+}
+
+input[type="password"]
+{
+    text-align: left;
+	font-family: Inter;
+	font-style: normal;
+	font-weight: bold;
+	font-size: min(20px, 1vw);
+	color: rgba(0, 0, 0, 1);
+    word-break: break-word;
+
+    border-radius: min(2.5vw, 25px);
+    border-style: none;
+
+    padding: min(0.3vw, 6px) min(0.5vw, 10px);
+
+    width: calc(2 * min(9.5vw, 200px));
+
+    display: block;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+select {
+    text-align: left;
+	font-family: Inter;
+	font-style: normal;
+	font-weight: bold;
+	font-size: min(20px, 1vw);
+	color: rgba(0, 0, 0, 1);
+    word-break: break-word;
+
+    border-radius: min(2.5vw, 25px);
+    border-style: none;
+
+    padding: min(0.3vw, 6px) min(0.5vw, 10px);
+
+    width: calc(2 * min(9.975vw, 210px));
+
+    display: block;
+}
+
+#title {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, calc(1 * min(40px, 2vw) * 2 / 3));
+
+    display: block;
+}
+
+#credit {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, calc(3 * min(40px, 2vw) * 2 / 3));
+
+    display: block;
+}
+
+#course {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, calc(5 * min(40px, 2vw) * 2 / 3));
+
+    display: block;
+}
+
+#file {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, calc(7 * min(40px, 2vw) * 2 / 3));
+
+    font-family: Inter;
+    font-style: normal;
+    font-weight: bold;
+    font-size: min(20px, 1vw);
+    color: rgba(0, 0, 0, 1);
+    word-break: break-word;
+
+    border-radius: min(2.5vw, 25px);
+    border-style: none;
+
+    padding: min(0.3vw, 6px) min(0.5vw, 10px);
+
+    width: calc(2 * min(9.5vw, 200px));
+
+    background-color: rgba(255, 255, 255, 255);
+
+    display: block;
+}
+
+#file_name{
+    transform: translate(1%, 0);
+}
+
+#upload_button {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, min(40px, 2vw));
+    border-color: rgba(0,0,0,1);
+    border-style: none;
+    border-width: min(3px, 0.15vw);
+    border-radius: min(2.5vw, 25px);
+
+    text-align: center;
+	font-family: Inter;
+	font-style: normal;
+	font-weight: bold;
+	font-size: min(25px, 1.25vw);
+	color: rgba(0,0,0,1);
+    word-break: keep-all;
+
+    width: min(7.125vw, 150px);
+	height: calc(min(9.5vw + 20px, 200px) * 1 / 4);
+
+    background-color: rgba(240, 240, 240, 0.7);
+}
+
+#upload_button:hover {
+    background-color: rgba(230, 230, 230, 0.6);
+}
+
+#login_button_box {
+    fill: transparent;
+	overflow: visible;
+	width: min(7.125vw, 150px);
+	height: calc(min(9.5vw + 20px, 200px) * 1 / 4);
+	border-style: none;
+	border-radius: min(2.5vw, 25px);
+	border-width: min(3px, 0.15vw);
+	border-color: rgba(0,0,0,1);
+	white-space: nowrap;
+
+	box-sizing: border-box;
+
+	vertical-align: middle;
+    line-height: min(1vw, 20px);
+
+    overflow: auto;
+
+    z-index: 4;
+
+    background-color: rgba(240, 240, 240, 0.7);
+
+    position: absolute;
+    right: calc(50% - (2 * min(9.5vw, 200px) + min(40px, 2vw) * 2 / 3 * 2.5) / 2);	top: calc(min(200px, 15vw) - min(50px, 3vw));
+    transform: translate(0%, 10%);
+}
+
+#login_button_box:hover {
+    background-color: rgba(230, 230, 230, 0.6);
+}
+
+.button_box {
+	position: absolute;
+	overflow: visible;
+
+    z-index: 4;
+}
+
+.button_text {
+    position: absolute;
+	overflow: visible;
+    top: 50%;
+	left: 50%;
+    transform: translate(-50%, -50%);
+	text-align: left;
+	font-family: Inter;
+	font-style: normal;
+	font-weight: bold;
+	font-size: min(25px, 1.25vw);
+	color: rgba(0,0,0,1);
+    word-break: keep-all;
+    white-space: nowrap;
+
+    z-index: 4;
+}

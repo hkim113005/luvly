@@ -1,0 +1,295 @@
+{% extends "layout.html" %}
+
+{% block title %}
+{{ problem_id }}
+{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" type="text/css" href="/static/problem.css" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+{% endblock %}
+
+{% block main %}
+<a id="back_button_link">
+    <div class="back_button">
+        <span>
+            < Back</span>
+    </div>
+</a>
+
+<div id="heading" class="heading_1">
+    <div>
+        <span>{{ problem_id }}</span>
+    </div>
+</div>
+
+<div id="scrollable">
+    <div id="problem_box">
+        <div id="problem_text_box">
+            {% if problem[7][0] == "@" %}
+            <img src="{{ url_for('static', filename='problems/' + problem_id + 'p.png') }}">
+            {% else %}
+            <span id="question">{{ problem[7] }}</span>
+            {% endif %}
+
+        </div>
+
+        <div id="A">
+            {% if problem[8][0] == "@" %}
+            <img src="{{ url_for('static', filename='problems/' + problem_id + 'a.png') }}">
+            {% else %}
+            <span id="answer_a">{{ problem[8] }}</span>
+            {% endif %}
+        </div>
+        <div id="B">
+            {% if problem[9][0] == "@" %}
+            <img src="{{ url_for('static', filename='problems/' + problem_id + 'b.png') }}">
+            {% else %}
+            <span id="answer_b">{{ problem[9] }}</span>
+            {% endif %}
+        </div>
+        <div id="C">
+            {% if problem[10][0] == "@" %}
+            <img src="{{ url_for('static', filename='problems/' + problem_id + 'c.png') }}">
+            {% else %}
+            <span id="answer_c">{{ problem[10] }}</span>
+            {% endif %}
+        </div>
+        <div id="D">
+            {% if problem[11][0] == "@" %}
+            <img src="{{ url_for('static', filename='problems/' + problem_id + 'd.png') }}">
+            {% else %}
+            <span id="answer_d">{{ problem[11] }}</span>
+            {% endif %}
+        </div>
+        {% if problem[12] != None %}
+        <div id="E">
+            {% if problem[12][0] == "@" %}
+            <img src="{{ url_for('static', filename='problems/' + problem_id + 'e.png') }}">
+            {% else %}
+            <span id="answer_e">{{ problem[12] }}</span>
+            {% endif %}
+        </div>
+        {% else %}
+        <div id="E" style="display: none;">
+            {% if problem[12][0] == "@" %}
+            <img src="{{ url_for('static', filename='problems/' + problem_id + 'e.png') }}">
+            {% else %}
+            <span id="answer_e">{{ problem[12] }}</span>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <div>
+            <button id="submit_button">Submit</button>
+        </div>
+
+        <div>
+            <button id="solution_button">Solution</button>
+        </div>
+    </div>
+</div>
+
+<script language="javascript">
+    document.getElementById("back_button_link").setAttribute("href", localStorage["{{ problem_id }}" + "_back"]);
+
+    userAgentString = navigator.userAgent
+    let chromeAgent = userAgentString.indexOf("Chrome") > -1;
+    let IExplorerAgent = userAgentString.indexOf("MSIE") > -1 || userAgentString.indexOf("rv:") > -1;
+    let firefoxAgent = userAgentString.indexOf("Firefox") > -1;
+    let safariAgent = userAgentString.indexOf("Safari") > -1;
+    if ((chromeAgent) && (safariAgent)) safariAgent = false;
+    let operaAgent = userAgentString.indexOf("OP") > -1;
+    if ((chromeAgent) && (operaAgent)) chromeAgent = false;
+
+    var selected_class = "answer_box_selected";
+    var box_class = "answer_box";
+    if (safariAgent) {
+        selected_class = "answer_box_selected_safari";
+        box_class = "answer_box_safari"
+    }
+
+    document.getElementById("A").classList.add(box_class);
+    document.getElementById("B").classList.add(box_class);
+    document.getElementById("C").classList.add(box_class);
+    document.getElementById("D").classList.add(box_class);
+    if ("{{ problem[12] }}" != "None") {
+        document.getElementById("E").classList.add(box_class);
+    }
+
+
+    $(window).resize(function () {
+        var element = document.getElementById("heading");
+        var height = element.offsetHeight
+        var font_size = parseInt(window.getComputedStyle(element).fontSize);
+        var lines = Math.floor(height / font_size);
+        var line_height = parseInt(parseInt(window.getComputedStyle(element).height) / lines);
+
+        total_height = document.getElementById("problem_text_box").offsetHeight + document.getElementById("A").offsetHeight + document.getElementById("B").offsetHeight + document.getElementById("C").offsetHeight + document.getElementById("D").offsetHeight;
+        console.log(document.getElementById("A").offsetHeight);
+        if (document.getElementById("E") != null) {
+            total_height += document.getElementById("E").offsetHeight;
+        }
+
+        document.getElementById("scrollable").style = `
+            height: calc(${total_height}px + 6 / 4 * (min(200px, 15vw) + min(50px, 3vw) * 5 / 2) + ${(lines - 1) * line_height}px + min(9.5vw + 20px, 200px) * 1 / 2 * 1 + min(9.5vw, 200px) * 1 / 4);
+        `;
+    });
+
+    var interval = window.setInterval(function () {
+        if (!eval(localStorage["{{ problem_id }}_submitted"])) {
+            var data = [
+                {
+                    "problem_id": "{{ problem_id }}",
+                    "status": "ATTEMPTED",
+                    "time": 1,
+                    "submission": localStorage["{{ problem_id }}_submission"]
+                }
+            ];
+            $.ajax({
+                type: "POST",
+                url: "/update_problem",
+                data: JSON.stringify(data),
+                contentType: "application/json",
+                dataType: "json"
+            });
+        }
+    }, 1000);
+
+    window.addEventListener("load", () => {
+        var element = document.getElementById("heading");
+        var height = element.offsetHeight
+        var font_size = parseInt(window.getComputedStyle(element).fontSize);
+        var lines = Math.floor(height / font_size);
+        var line_height = parseInt(parseInt(window.getComputedStyle(element).height) / lines);
+
+        if ("{{ problem[-1] }}" != "None") {
+            localStorage["{{ problem_id }}_submission"] = "{{ problem[-1] }}"
+        }
+        if ("{{ problem[-4] }}" != "None" && "{{ problem[-4] }}" != "ATTEMPTED") {
+            localStorage["{{ problem_id }}_submitted"] = true;
+        }
+        else {
+            localStorage["{{ problem_id }}_submitted"] = false;
+        }
+
+        if (eval(localStorage["{{ problem_id }}_submitted"]) == true) {
+            document.querySelectorAll("." + box_class).forEach((box) => {
+                box.style.setProperty("--answer_box_border_color", "transparent");
+            });
+
+            if (localStorage["{{ problem_id }}_submission"] == "{{ answer }}") {
+                document.getElementById(localStorage["{{ problem_id }}_submission"]).classList.add("correct");
+            }
+            else {
+                document.getElementById(localStorage["{{ problem_id }}_submission"]).classList.add("incorrect");
+            }
+
+            document.getElementById("solution_button").style.display = "block";
+            document.getElementById("submit_button").style.display = "none";
+        }
+        else {
+            document.querySelectorAll("." + box_class).forEach((box) => {
+                box.style.setProperty("--answer_box_border_color", "rgba(140, 140, 140, 0.1)");
+            });
+
+            localStorage["{{ problem_id }}_submitted"] = false;
+
+            document.getElementById("submit_button").style.display = "block";
+            document.getElementById("solution_button").style.display = "none";
+        }
+
+        total_height = document.getElementById("problem_text_box").offsetHeight + document.getElementById("A").offsetHeight + document.getElementById("B").offsetHeight + document.getElementById("C").offsetHeight + document.getElementById("D").offsetHeight;
+        console.log(document.getElementById("A").offsetHeight);
+        if (document.getElementById("E") != null) {
+            total_height += document.getElementById("E").offsetHeight;
+        }
+        console.log(total_height)
+        document.getElementById("scrollable").style = `
+                height: calc(${total_height}px + 6 / 4 * (min(200px, 15vw) + min(50px, 3vw) * 5 / 2) + ${(lines - 1) * line_height}px + min(9.5vw + 20px, 200px) * 1 / 2 * 1 + min(9.5vw, 200px) * 1 / 4);
+            `;
+
+        if (localStorage["{{ problem_id }}_submission"] != null) {
+            document.getElementById(localStorage["{{ problem_id }}_submission"]).classList.add(selected_class);
+
+            document.getElementById("submit_button").style.setProperty("--submit_button_transform", "translate(-50%, calc(min(40px, 2vw) - min(7px, 0.35vw) / 2))");
+            document.getElementById("submit_button").style.setProperty("--submit_button_width", "calc(min(7.125vw, 150px) + min(7px, 0.35vw))");
+            document.getElementById("submit_button").style.setProperty("--submit_button_height", "calc(min(9.5vw + 20px, 200px) * 1 / 4 + min(7px, 0.35vw))");
+        }
+        else {
+            document.getElementById("submit_button").style.setProperty("--submit_button_transform", "translate(-50%, min(40px, 2vw))");
+            document.getElementById("submit_button").style.setProperty("--submit_button_width", "min(7.125vw, 150px)");
+            document.getElementById("submit_button").style.setProperty("--submit_button_height", "calc(min(9.5vw + 20px, 200px) * 1 / 4)");
+        }
+
+        document.querySelectorAll("." + box_class).forEach((box) => {
+            box.addEventListener("click", () => {
+                if (!eval(localStorage["{{ problem_id }}_submitted"])) {
+                    if (box.classList.contains(selected_class)) {
+                        box.classList.remove(selected_class);
+
+                        document.getElementById("submit_button").style.setProperty("--submit_button_transform", "translate(-50%, min(40px, 2vw))");
+                        document.getElementById("submit_button").style.setProperty("--submit_button_width", "min(7.125vw, 150px)");
+                        document.getElementById("submit_button").style.setProperty("--submit_button_height", "calc(min(9.5vw + 20px, 200px) * 1 / 4)");
+
+                        localStorage.removeItem("{{ problem_id }}_submission");
+                    }
+                    else {
+                        document.querySelectorAll("." + box_class).forEach((other_box) => {
+                            other_box.classList.remove(selected_class);
+                        });
+                        box.classList.add(selected_class);
+
+                        document.getElementById("submit_button").style.setProperty("--submit_button_transform", "translate(-50%, calc(min(40px, 2vw) - min(7px, 0.35vw) / 2))");
+                        document.getElementById("submit_button").style.setProperty("--submit_button_width", "calc(min(7.125vw, 150px) + min(7px, 0.35vw))");
+                        document.getElementById("submit_button").style.setProperty("--submit_button_height", "calc(min(9.5vw + 20px, 200px) * 1 / 4 + min(7px, 0.35vw))");
+
+                        localStorage["{{ problem_id }}_submission"] = box.id;
+                    }
+                }
+            });
+        });
+
+        document.getElementById("submit_button").addEventListener("click", () => {
+            if (localStorage.getItem("{{ problem_id }}_submission") != null) {
+                localStorage["{{ problem_id }}_submitted"] = true;
+
+                document.querySelectorAll("." + box_class).forEach((box) => {
+                    box.style.setProperty("--answer_box_border_color", "transparent");
+                });
+
+                if (localStorage["{{ problem_id }}_submission"] == "{{ answer }}") {
+                    document.getElementById(localStorage["{{ problem_id }}_submission"]).classList.add("correct");
+                }
+                else {
+                    document.getElementById(localStorage["{{ problem_id }}_submission"]).classList.add("incorrect");
+                }
+
+                document.getElementById("solution_button").style.display = "block";
+                document.getElementById("submit_button").style.display = "none";
+
+                var status = "INCORRECT"
+                if (localStorage["{{ problem_id }}_submission"] == "{{ answer }}") {
+                    status = "CORRECT"
+                }
+                var data = [
+                    {
+                        "problem_id": "{{ problem_id }}",
+                        "status": status,
+                        "time": 0,
+                        "submission": localStorage["{{ problem_id }}_submission"]
+                    }
+                ];
+                $.ajax({
+                    type: "POST",
+                    url: "/update_problem",
+                    data: JSON.stringify(data),
+                    contentType: "application/json",
+                    dataType: "json"
+                });
+            }
+        });
+    });
+</script>
+{% endblock %}
