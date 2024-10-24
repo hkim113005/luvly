@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, session, redirect, url_for, send_from_directory, jsonify
 from flask_session import Session
-
+import time
 import sqlite3
 
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -126,6 +126,33 @@ def logout():
 
     return redirect("/")
 
+@app.route("/update_location", methods=["POST"])
+@login_required
+def update_test_result():
+    if request.method == "POST":
+        db = sqlite3.connect("data.db")
+        
+        cursor = db.cursor()
+        
+        data = request.get_json()[0]
+        user_id = session["user_id"]
+        
+        latitude = data.get("latitude", None)
+        longitude = data.get("longitude", None)
+      
+        date_time = time.strftime("%Y-%m-%d %H:%M:%S")
+
+        cursor.execute("""
+            INSERT INTO tests_results (user_id,latitude, longitude, date_time) 
+            VALUES (?, ?, ?, ?)
+        """, (user_id, latitude, longitude, date_time))
+        
+        db.commit()
+        cursor.close()
+        db.close()
+
+        results = {"processed": "true"}
+        return jsonify(results)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=1000)

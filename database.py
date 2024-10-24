@@ -13,3 +13,12 @@ cursor.execute("""CREATE TABLE `users` (
                `email` varchar(500) NOT NULL, 
                `password_hash` text, 
                PRIMARY KEY (`user_id`))""")
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS user_locations (
+    user_id char(8) NOT NULL,
+    latitude REAL,
+    longitude REAL,
+    date_time TEXT
+)
+""")
