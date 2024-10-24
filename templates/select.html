@@ -8,7 +8,7 @@
 	<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="/static/layout.css"/>
 	<link rel="stylesheet" type="text/css" href="/static/heading.css"/>
-	<link rel="stylesheet" type="text/css" href="/static/register.css"/>
+	<link rel="stylesheet" type="text/css" href="/static/select.css"/>
 	<style type="text/css">
 		.hidden {display:none;}
 	</style>
@@ -34,21 +34,15 @@
 
 	<div id="scrollable">
         <div id="form_box">
-            <form action="/select" method="POST">
+            <form action="/sign-up" method="POST">
                     <div id="form_text_box">
                         <div id="email">
-                            <input autocomplete="off" autofocus name="email" placeholder="Email" type="email" required>
+                            <input id="last_input" autocomplete="off" autofocus name="email" placeholder="Email" type="email" required>
                         </div>
                     </div>
-                    <button id="register_button" type="submit">Sign Up</button>
+                    <button id="register_button" type="submit">Select</button>
             </form>
         </div>
-
-        <a href="/login">
-            <div id="login_button_box" class="button_box">
-                    <span class="button_text">Log In</span>
-            </div>
-        </a>
 	</div>
 
     <script language="javascript">
@@ -56,7 +50,7 @@
             var element = document.getElementById("last_input");
             var height =  element.offsetHeight;
 
-            document.getElementById("form_text_box").style.height = "calc(" + height + "px + 8 * min(40px, 2vw) * 2 / 3)";
+            document.getElementById("form_text_box").style.height = "calc(" + height + "px + 2 * min(40px, 2vw) * 2 / 3)";
 
             document.getElementById("scrollable").style = `
                 overflow: auto;
