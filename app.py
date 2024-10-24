@@ -178,7 +178,7 @@ def update_location():
         
         # Get users who love the current user and are within 10 units of distance
         cursor.execute("""
-            SELECT u.id, u.username, ul.latitude, ul.longitude,
+            SELECT ul.user_id, ul.latitude, ul.longitude,
                    (6371000 * acos(cos(radians(?)) * cos(radians(ul.latitude)) * 
                    cos(radians(ul.longitude) - radians(?)) + 
                    sin(radians(?)) * sin(radians(ul.latitude)))) AS distance
@@ -193,15 +193,16 @@ def update_location():
         """, (latitude, longitude, latitude, user_id, latitude, longitude, latitude))
         
         nearby_luv_users = cursor.fetchall()
+
+        print(nearby_luv_users)
         
         # Add nearby users who love the current user to the results
         results["nearby_luv_users"] = [
             {
                 "id": user[0],
-                "username": user[1],
-                "latitude": user[2],
-                "longitude": user[3],
-                "distance": user[4]
+                "latitude": user[1],
+                "longitude": user[2],
+                "distance": user[3]
             }
             for user in nearby_luv_users
         ]
@@ -210,7 +211,7 @@ def update_location():
             cursor.execute("""
                 INSERT INTO near_luvs (user_id, luv_id, distance, date_time)
                 VALUES (?, ?, ?, ?)
-            """, (user_id, user[0], user[4], date_time))
+            """, (user_id, user[0], user[3], date_time))
                 
         db.commit()
 
