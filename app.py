@@ -153,12 +153,18 @@ def update_location():
         cursor.execute("SELECT COUNT(*) FROM user_locations WHERE user_id = ?", (user_id,))
         count = cursor.fetchone()[0]
         
-        if(count >= 60):
+        if count >= 30:
             cursor.execute("""
             DELETE FROM user_locations
             WHERE user_id = ?
-            AND user_id = (SELECT user_id FROM user_locations WHERE user_id = ? ORDER BY date_time ASC LIMIT 1)
-        """, (user_id, user_id))
+            AND date_time = (
+                SELECT date_time
+                FROM user_locations
+                WHERE user_id = ?
+                ORDER BY date_time ASC
+                LIMIT 1
+            )
+            """, (user_id, user_id))
         
         cursor.execute("""
             INSERT INTO user_locations (user_id, latitude, longitude, date_time) 
