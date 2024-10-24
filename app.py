@@ -102,7 +102,7 @@ def register():
         cursor.execute("SELECT COUNT(*) FROM users")
         user_id = cursor.fetchall()[0][0]
 
-        cursor.execute(f"INSERT INTO users (user_id, username, score, email, password_hash) VALUES(LPAD('{user_id}', 8, '0'), '{username}', 0, '{email}', '{generate_password_hash(password)}');")
+        cursor.execute(f"INSERT INTO users (user_id, username, email, password_hash) VALUES(substr('0000000000' || '{user_id}', -8, 8), '{username}', '{email}', '{generate_password_hash(password)}');")
         db.commit()
 
         cursor.execute(f"SELECT * FROM users WHERE username = '{username}'")
