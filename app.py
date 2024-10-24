@@ -3,6 +3,7 @@ from flask_session import Session
 from flask_cors import CORS
 
 import time
+from geopy.distance import geodesic
 
 import sqlite3
 
@@ -176,6 +177,44 @@ def update_location():
         db.close()
 
         results = {"processed": "true"}
+        
+        # Get users who love the current user and are within 10 units of distance
+        cursor.execute("""
+            SELECT u.id, u.username, ul.latitude, ul.longitude,
+                   (6371000 * acos(cos(radians(?)) * cos(radians(ul.latitude)) * 
+                   cos(radians(ul.longitude) - radians(?)) + 
+                   sin(radians(?)) * sin(radians(ul.latitude)))) AS distance
+            FROM user_locations ul
+            JOIN users u ON ul.user_id = u.user_id
+            JOIN user_luvs l ON l.user_id = u.user_id
+            WHERE l.luv_id = ?
+            AND (6371000 * acos(cos(radians(?)) * cos(radians(ul.latitude)) * 
+                 cos(radians(ul.longitude) - radians(?)) + 
+                 sin(radians(?)) * sin(radians(ul.latitude)))) <= 10
+            ORDER BY distance
+        """, (latitude, longitude, latitude, user_id, latitude, longitude, latitude))
+        
+        nearby_luv_users = cursor.fetchall()
+        
+        # Add nearby users who love the current user to the results
+        results["nearby_luv_users"] = [
+            {
+                "id": user[0],
+                "username": user[1],
+                "latitude": user[2],
+                "longitude": user[3],
+                "distance": user[4]
+            }
+            for user in nearby_luv_users
+        ]
+        # Insert nearby luv users into the near_luvs table
+        for user in nearby_luv_users:
+            cursor.execute("""
+                INSERT INTO near_luvs (user_id, luv_id, distance, date_time)
+                VALUES (?, ?, ?, ?)
+            """, (user_id, user[0], user[4], date_time))
+        
+        db.commit()
         return jsonify(results)
 
 
