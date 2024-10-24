@@ -16,6 +16,7 @@ cursor.execute("""CREATE TABLE `users` (
 
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS user_locations (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id char(8) NOT NULL,
     latitude REAL,
     longitude REAL,
