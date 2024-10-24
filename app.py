@@ -132,7 +132,7 @@ def logout():
 
 @app.route("/update_location", methods=["POST"])
 @login_required
-def update_test_result():
+def update_location():
     if request.method == "POST":
         db = sqlite3.connect("data.db")
         
@@ -147,7 +147,7 @@ def update_test_result():
         date_time = time.strftime("%Y-%m-%d %H:%M:%S")
 
         cursor.execute("""
-            INSERT INTO tests_results (user_id,latitude, longitude, date_time) 
+            INSERT INTO user_locations (user_id, latitude, longitude, date_time) 
             VALUES (?, ?, ?, ?)
         """, (user_id, latitude, longitude, date_time))
         
