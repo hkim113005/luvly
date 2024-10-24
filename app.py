@@ -42,7 +42,6 @@ def login_not_required(f):
 @app.route("/", methods=["GET"])
 @login_required
 def home():
-    print(session)
     return render_template("home.html", user_id=session["user_id"], username=session["username"])
 
 
@@ -62,7 +61,7 @@ def login():
         cursor.execute(f"SELECT * FROM users WHERE username = '{username}' OR email = '{username}'")
         user = cursor.fetchall()
 
-        if len(user) == 0 or not check_password_hash(user[0][9], password):
+        if len(user) == 0 or not check_password_hash(user[0][5], password):
             return render_template("login.html", username=username, password=password)
 
         session["user_id"] = user[0][0]
@@ -198,11 +197,12 @@ def select():
         cursor.execute(f"SELECT * FROM users WHERE email = '{email}'")
         luv = cursor.fetchall()
 
+        user_id = session["user_id"]
         luv_id = luv[0][0]
         # username = user[0][1]
         # ser_name = user[0][2]
 
-        cursor.execute(f"INSERT INTO user_luvs (user_id, luv_id) VALUES(SUBSTR('0000000000' || '{user_id}', -8, 8), substr('0000000000' || '{luv_id}', -8, 8));")
+        cursor.execute(f"INSERT INTO user_luvs (user_id, luv_id) VALUES(substr('0000000000' || '{user_id}', -8, 8), substr('0000000000' || '{luv_id}', -8, 8));")
         db.commit()
 
         cursor.close()
