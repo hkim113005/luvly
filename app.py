@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, session, redirect, url_for, send_from_directory, jsonify
 from flask_session import Session
+from flask_cors import CORS
 
 import sqlite3
 
@@ -7,6 +8,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from functools import wraps
 
 app = Flask(__name__)
+CORS(app)
 
 app.config["SESSION_TYPE"] = "filesystem"
 
@@ -35,7 +37,7 @@ def login_not_required(f):
 @app.route("/", methods=["GET"])
 @login_required
 def home():
-    return "Hello"
+    return render_template("home.html")
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -128,4 +130,4 @@ def logout():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=1000)
+    app.run(host="0.0.0.0", port=1000, ssl_context='adhoc')
