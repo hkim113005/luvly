@@ -16,8 +16,10 @@ app.config["SESSION_TYPE"] = "filesystem"
 
 Session(app)
 
+
 def get_db():
     return sqlite3.connect("data.db")
+
 
 def login_required(f):
     @wraps(f)
@@ -26,6 +28,7 @@ def login_required(f):
             return redirect("/login")
         return f(*args, **kwargs)
     return decorated_function
+
 
 def login_not_required(f):
     @wraps(f)
@@ -39,7 +42,7 @@ def login_not_required(f):
 @app.route("/", methods=["GET"])
 @login_required
 def home():
-    return render_template("home.html")
+    return render_template("home.html", user_id=session["user_id"], username=session["username"])
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -123,12 +126,14 @@ def register():
     else:
         return render_template("register.html")
 
+
 @app.route("/logout", methods=["GET"])
 @login_not_required
 def logout():
     session.clear()
 
     return redirect("/")
+
 
 @app.route("/update_location", methods=["POST"])
 @login_required
@@ -157,6 +162,47 @@ def update_location():
 
         results = {"processed": "true"}
         return jsonify(results)
+
+
+@app.route("/select", methods=["GET", "POST"])
+@login_required
+def select():
+    if request.method == "POST":
+        db = get_db()
+        
+        cursor = db.cursor()
+    
+        email = request.form.get("email")
+        # first_name = request.form.get("first_name")
+        # last_name = request.form.get("last_name")
+        # dob = request.form.get("dob")
+        # sex = request.form.get("sex")
+        # grade = request.form.get("grade")
+        # type = request.form.get("type")
+        # organization = request.form.get("organization")
+
+        cursor.execute(f"SELECT * FROM users WHERE email = '{email}'")
+        if len(cursor.fetchall()) == 0:
+            return "email does not exist"
+
+        cursor.execute(f"SELECT * FROM users WHERE email = '{email}'")
+        luv = cursor.fetchall()
+
+        luv_id = luv[0][0]
+        # username = user[0][1]
+        # ser_name = user[0][2]
+
+        cursor.execute(f"INSERT INTO user_luvs (user_id, luv_id) VALUES(SUBSTR('0000000000' || '{user_id}', -8, 8), substr('0000000000' || '{luv_id}', -8, 8));")
+        db.commit()
+
+        cursor.close()
+        db.close()
+
+        return redirect("/")
+
+    else:
+        return render_template("select.html")
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=1000, ssl_context='adhoc')
