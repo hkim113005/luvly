@@ -176,41 +176,43 @@ def update_location():
 
         results = {"processed": "true"}
         
-        # Get users who love the current user and are within 10 units of distance
+        # Calculate distances between users
         cursor.execute("""
-            SELECT u.id, u.username, ul.latitude, ul.longitude,
-                   (6371000 * acos(cos(radians(?)) * cos(radians(ul.latitude)) * 
-                   cos(radians(ul.longitude) - radians(?)) + 
-                   sin(radians(?)) * sin(radians(ul.latitude)))) AS distance
-            FROM user_locations ul
-            JOIN users u ON ul.user_id = u.user_id
-            JOIN user_luvs l ON l.user_id = u.user_id
-            WHERE l.luv_id = ?
-            AND (6371000 * acos(cos(radians(?)) * cos(radians(ul.latitude)) * 
-                 cos(radians(ul.longitude) - radians(?)) + 
-                 sin(radians(?)) * sin(radians(ul.latitude)))) <= 10
-            ORDER BY distance
-        """, (latitude, longitude, latitude, user_id, latitude, longitude, latitude))
+            SELECT user_id, latitude, longitude 
+            FROM user_locations 
+            WHERE (user_id, date_time) IN (
+                SELECT user_id, MAX(date_time) 
+                FROM user_locations 
+                GROUP BY user_id
+            )
+        """)
+        all_users = cursor.fetchall()
         
-        nearby_luv_users = cursor.fetchall()
-        
-        # Add nearby users who love the current user to the results
-        results["nearby_luv_users"] = [
-            {
-                "id": user[0],
-                "username": user[1],
-                "latitude": user[2],
-                "longitude": user[3],
-                "distance": user[4]
-            }
-            for user in nearby_luv_users
-        ]
-        # Insert nearby luv users into the near_luvs table
-        for user in nearby_luv_users:
-            cursor.execute("""
-                INSERT INTO near_luvs (user_id, luv_id, distance, date_time)
-                VALUES (?, ?, ?, ?)
-            """, (user_id, user[0], user[4], date_time))
+        # # Delete existing entries for the current user in near_luvs
+        # cursor.execute("DELETE FROM near_luvs WHERE user_id = ?", (session["user_id"],))
+        db.commit()
+        print(all_users)
+        for user in all_users:
+            user_id, user_lat, user_lon = user
+            if user_id == session["user_id"]:
+                continue  # Skip calculating distance to self
+            
+            for other_user in all_users:
+                other_id, other_lat, other_lon = other_user
+                if other_id == user_id:
+                    continue  # Skip calculating distance to self
+                
+                distance = geodesic((user_lat, user_lon), (other_lat, other_lon)).meters
+                
+                # Store the calculated distance in the near_luvs table if less than 10 meters and the other user loves this user
+                if distance < 10:
+                    cursor.execute("SELECT * FROM user_luvs WHERE user_id = ? AND luv_id = ?", (other_id, user_id))
+                    if cursor.fetchone():
+                        cursor.execute("""
+                            INSERT OR REPLACE INTO near_luvs (user_id, luv_id, distance, date_time)
+                            VALUES (?, ?, ?, ?)
+                        """, (user_id, other_id, distance, date_time))
+        results["distances_calculated"] = "true"
                 
         db.commit()
 
