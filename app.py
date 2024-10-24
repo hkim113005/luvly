@@ -189,7 +189,7 @@ def update_location():
         all_users = cursor.fetchall()
         
         # # Delete existing entries for the current user in near_luvs
-        # cursor.execute("DELETE FROM near_luvs WHERE user_id = ?", (session["user_id"],))
+        cursor.execute("DELETE FROM near_luvs WHERE user_id = ?", (session["user_id"],))
         db.commit()
         print(all_users)
         for user in all_users:
