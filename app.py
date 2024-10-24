@@ -145,7 +145,16 @@ def update_location():
         longitude = data.get("longitude", None)
       
         date_time = time.strftime("%Y-%m-%d %H:%M:%S")
-
+        cursor.execute("SELECT COUNT(*) FROM locations WHERE user_id = ?", (user_id,))
+        count = cursor.fetchone()[0]
+        
+        if(count >= 60):
+            cursor.execute("""
+            DELETE FROM user_locations
+            WHERE user_id = ?
+            AND id = (SELECT id FROM locations WHERE user_id = ? ORDER BY timestamp ASC LIMIT 1)
+        """, (user_id, user_id))
+        
         cursor.execute("""
             INSERT INTO user_locations (user_id, latitude, longitude, date_time) 
             VALUES (?, ?, ?, ?)
