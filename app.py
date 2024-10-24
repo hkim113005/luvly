@@ -208,7 +208,15 @@ def select():
         # username = user[0][1]
         # ser_name = user[0][2]
 
-        cursor.execute(f"INSERT INTO user_luvs (user_id, luv_id) VALUES(substr('0000000000' || '{user_id}', -8, 8), substr('0000000000' || '{luv_id}', -8, 8));")
+        cursor.execute(f"SELECT * FROM user_luvs WHERE `user_id` = '{user_id}'")
+
+        if len(cursor.fetchall()) == 0:
+            cursor.execute(f"""INSERT INTO user_luvs (user_id, luv_id) 
+                           VALUES(substr('0000000000' || '{user_id}', -8, 8), substr('0000000000' || '{luv_id}', -8, 8));""")
+        else:
+            cursor.execute(f"""UPDATE user_luvs
+                           SET luv_id = '{luv_id}'
+                           WHERE user_id = '{user_id}'""")
         db.commit()
 
         cursor.close()
