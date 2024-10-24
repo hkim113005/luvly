@@ -42,6 +42,7 @@ def login_not_required(f):
 @app.route("/", methods=["GET"])
 @login_required
 def home():
+    print(session)
     return render_template("home.html", user_id=session["user_id"], username=session["username"])
 
 
@@ -128,7 +129,7 @@ def register():
 
 
 @app.route("/logout", methods=["GET"])
-@login_not_required
+@login_required
 def logout():
     session.clear()
 
