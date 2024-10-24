@@ -30,8 +30,10 @@
         function getLocation() {
             var currentPosition;
             if (navigator.geolocation) {
-                currentPosition = navigator.geolocation.getCurrentPosition(saveLocation);
+                console.log("success");
+                navigator.geolocation.getCurrentPosition(saveLocation, error, {enableHighAccuracy: true});
             } else {
+                console.log("fail");
                 x.innerHTML = "Geolocation is not supported by this browser.";
             }
 
@@ -39,6 +41,7 @@
         }
 
         function saveLocation(position) {
+            console.log("HELLO");
             var data = [
                 {
                     "user_id": "{{ user_id }}",
@@ -46,6 +49,8 @@
                     "longitude": position.coords.longitude
                 }
             ];
+
+            console.log("update");
             
             $.ajax({
                 type: "POST",
@@ -54,6 +59,10 @@
                 contentType: "application/json",
                 dataType: "json"
             });
+        }
+
+        function error(position) {
+            console.log("ERROR");
         }
 
         function getNearLuvs() {

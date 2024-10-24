@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS user_locations (
 )
 """)
 # Create a table to store user matches
+# cursor.execute("DROP TABLE IF EXISTS `near_luvs`")
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS near_luvs (
     user_id char(8) NOT NULL,
