@@ -280,8 +280,22 @@ def get_near_luvs():
 
     user_id = session["user_id"]
 
-    cursor.execute(f"""SELECT * FROM near_luvs
-                   WHERE user_id = '{user_id}'""")
+    cursor.execute(f"""WITH RankedLuvs AS (
+                        SELECT 
+                            user_id, 
+                            luv_id, 
+                            distance,
+                            date_time,
+                            ROW_NUMBER() OVER (PARTITION BY luv_id ORDER BY date_time DESC) AS rn
+                        FROM near_luvs
+                        WHERE user_id = '{user_id}')
+                    SELECT 
+                        user_id, 
+                        luv_id, 
+                        distance,
+                        date_time
+                    FROM RankedLuvs
+                    WHERE rn = 1;""")
     results = cursor.fetchall()
 
     cursor.close()
