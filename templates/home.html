@@ -24,6 +24,7 @@
 
         window.addEventListener("load", () => {
 			getLocation();
+            getNearLuvs();
 		});
 
         function getLocation() {
@@ -45,8 +46,6 @@
                     "longitude": position.coords.longitude
                 }
             ];
-
-            console.log("HELLO");
             
             $.ajax({
                 type: "POST",
@@ -55,6 +54,18 @@
                 contentType: "application/json",
                 dataType: "json"
             });
+        }
+
+        function getNearLuvs() {
+            $.ajax({
+                type: "GET",
+                url: "/get_near_luvs",
+                success: function(data) {
+                    console.log(data);
+                }
+            })
+
+            setTimeout(getNearLuvs, 5000);
         }
     </script>
 {% endblock %}

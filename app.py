@@ -228,5 +228,11 @@ def select():
         return render_template("select.html")
 
 
+@app.route("/get_near_luvs", methods=["GET"])
+@login_required
+def get_near_luvs():
+    return "A"
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=1000, ssl_context='adhoc')
