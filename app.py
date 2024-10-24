@@ -173,8 +173,6 @@ def update_location():
         """, (user_id, latitude, longitude, date_time))
         
         db.commit()
-        cursor.close()
-        db.close()
 
         results = {"processed": "true"}
         
@@ -213,8 +211,12 @@ def update_location():
                 INSERT INTO near_luvs (user_id, luv_id, distance, date_time)
                 VALUES (?, ?, ?, ?)
             """, (user_id, user[0], user[4], date_time))
-        
+                
         db.commit()
+
+        cursor.close()
+        db.close()
+
         return jsonify(results)
 
 
@@ -270,7 +272,20 @@ def select():
 @app.route("/get_near_luvs", methods=["GET"])
 @login_required
 def get_near_luvs():
-    return "A"
+    db = get_db()
+        
+    cursor = db.cursor()
+
+    user_id = session["user_id"]
+
+    cursor.execute(f"""SELECT * FROM near_luvs
+                   WHERE user_id = '{user_id}'""")
+    results = cursor.fetchall()
+
+    cursor.close()
+    db.close()
+    
+    return results
 
 
 if __name__ == "__main__":
