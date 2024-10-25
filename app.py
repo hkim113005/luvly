@@ -255,6 +255,46 @@ def select():
             cursor.execute(f"""UPDATE user_luvs
                            SET luv_id = '{luv_id}'
                            WHERE user_id = '{user_id}'""")
+            
+        cursor.execute(f"SELECT * FROM user_luvs WHERE `user_id` = '{user_id}'")
+
+        if len(cursor.fetchall()) == 0:
+            cursor.execute(f"""INSERT INTO user_luvs (user_id, luv_id) 
+                           VALUES(substr('0000000000' || '{user_id}', -8, 8), substr('0000000000' || '{luv_id}', -8, 8));""")
+        else:
+            cursor.execute(f"""UPDATE user_luvs
+                           SET luv_id = '{luv_id}'
+                           WHERE user_id = '{user_id}'""")
+            
+        cursor.execute(f"DELETE FROM near_luvs WHERE `luv_id` = '{user_id}'")
+
+        print(user_id)
+        cursor.execute(f"""
+            SELECT user_id, latitude, longitude, date_time
+            FROM user_locations
+            WHERE user_id = '{user_id}'
+            ORDER BY date_time DESC
+            LIMIT 1;
+        """)
+        user = cursor.fetchall()[0]
+        print(user)
+
+        cursor.execute(f"""
+            SELECT user_id, latitude, longitude, date_time
+            FROM user_locations
+            WHERE user_id = '{luv_id}'
+            ORDER BY date_time DESC
+            LIMIT 1;
+        """)
+        luv = cursor.fetchall()[0]
+
+        distance = geodesic((user[1], user[2]), (luv[1], luv[2])).meters
+        date_time = time.strftime("%Y-%m-%d %H:%M:%S")
+
+        if distance < 100:
+            print(f"INSERT INTO near_luvs (user_id, luv_id, distance, date_time) VALUES({luv_id}, {user_id}, {distance}, '{date_time}')")
+            cursor.execute(f"INSERT INTO near_luvs (user_id, luv_id, distance, date_time) VALUES('{luv_id}', '{user_id}', {distance}, '{date_time}')")
+
         db.commit()
 
         cursor.close()
