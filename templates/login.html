@@ -35,7 +35,7 @@
             <form action="/login" method="POST">
                 <div id="form_text_box">
                     <div id="username">
-                        <input autocomplete="off" autofocus name="username" placeholder="Username / Email" type="text" {% if username %}value={{ username }}{% endif %} required>
+                        <input autocomplete="off" autofocus name="email" placeholder="Email" type="text" {% if email %}value={{ email }}{% endif %} required>
                     </div>
                     <div id="password">
                         <input id="last_input" name="password" placeholder="Password" type="password" {% if password %}value={{ password }}{% endif %} required>

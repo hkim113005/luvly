@@ -18,6 +18,9 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 
+DISTANCE = 20
+
+
 def get_db():
     return sqlite3.connect("data.db")
 
@@ -40,10 +43,11 @@ def login_not_required(f):
             return f(*args, **kwargs)
     return decorated_function
 
+
 @app.route("/", methods=["GET"])
 @login_required
 def home():
-    return render_template("home.html", user_id=session["user_id"], username=session["username"])
+    return render_template("home.html", user_id=session["user_id"], email=session["email"])
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -52,23 +56,22 @@ def login():
     session.clear()
     
     db = get_db()
-    
     cursor = db.cursor()
 
     if request.method == "POST":
-        username = request.form.get("username")
+        email = request.form.get("email")
         password = request.form.get("password")
 
-        cursor.execute(f"SELECT * FROM users WHERE username = '{username}' OR email = '{username}'")
-        user = cursor.fetchall()
+        cursor.execute(f"SELECT * FROM users WHERE email = '{email}'")
+        user = cursor.fetchone()
 
-        if len(user) == 0 or not check_password_hash(user[0][5], password):
-            return render_template("login.html", username=username, password=password)
+        if len(user) == 0 or not check_password_hash(user[2], password):
+            return render_template("login.html", email=email, password=password)
 
-        session["user_id"] = user[0][0]
-        session["username"] = user[0][1]
-        session["user_name"] = user[0][2]
+        session["user_id"] = user[0]
+        session["email"] = email
         
+
         cursor.close()
         db.close()
 
@@ -85,39 +88,29 @@ def login():
 def register():
     if request.method == "POST":
         db = get_db()
-        
         cursor = db.cursor()
     
-        username = request.form.get("username")
         password = request.form.get("password")
         email = request.form.get("email")
-        # first_name = request.form.get("first_name")
-        # last_name = request.form.get("last_name")
-        # dob = request.form.get("dob")
-        # sex = request.form.get("sex")
-        # grade = request.form.get("grade")
-        # type = request.form.get("type")
-        # organization = request.form.get("organization")
-
-        cursor.execute(f"SELECT * FROM users WHERE username = '{username}'")
-        if len(cursor.fetchall()) != 0:
-            return "user repeat"
 
         cursor.execute(f"SELECT * FROM users WHERE email = '{email}'")
         if len(cursor.fetchall()) != 0:
             return "email repeat"
 
         cursor.execute("SELECT COUNT(*) FROM users")
-        user_id = cursor.fetchall()[0][0]
+        user_id = cursor.fetchone()[0]
 
-        cursor.execute(f"INSERT INTO users (user_id, username, email, password_hash) VALUES(substr('0000000000' || '{user_id}', -8, 8), '{username}', '{email}', '{generate_password_hash(password)}');")
+        cursor.execute(f"""INSERT INTO users (user_id, email, password_hash) 
+                       VALUES(SUBSTR('0000000000' || '{user_id}', -8, 8), '{email}', '{generate_password_hash(password)}');""")
+
+        cursor.execute(f"SELECT * FROM users WHERE email = '{email}'")
+        user = cursor.fetchone()
+
+        session["user_id"] = user[0]
+        session["email"] = email
+
+        
         db.commit()
-
-        cursor.execute(f"SELECT * FROM users WHERE username = '{username}'")
-        user = cursor.fetchall()
-
-        session["user_id"] = user[0][0]
-        session["username"] = user[0][1]
 
         cursor.close()
         db.close()
@@ -140,8 +133,7 @@ def logout():
 @login_required
 def update_location():
     if request.method == "POST":
-        db = sqlite3.connect("data.db")
-        
+        db = get_db()
         cursor = db.cursor()
         
         data = request.get_json()[0]
@@ -149,86 +141,118 @@ def update_location():
         
         latitude = data.get("latitude", None)
         longitude = data.get("longitude", None)
-      
         date_time = time.strftime("%Y-%m-%d %H:%M:%S")
-        cursor.execute("SELECT COUNT(*) FROM user_locations WHERE user_id = ?", (user_id,))
+        cursor.execute(f"SELECT COUNT(*) FROM users_locations WHERE user_id = '{user_id}'")
         count = cursor.fetchone()[0]
         
         if count >= 30:
-            cursor.execute("""
-            DELETE FROM user_locations
-            WHERE user_id = ?
+            cursor.execute(f"""
+            DELETE FROM users_locations
+            WHERE user_id = '{user_id}'
             AND date_time = (
                 SELECT date_time
-                FROM user_locations
-                WHERE user_id = ?
+                FROM users_locations
+                WHERE user_id = '{user_id}'
                 ORDER BY date_time ASC
                 LIMIT 1
             )
-            """, (user_id, user_id))
-        
-        cursor.execute("""
-            INSERT INTO user_locations (user_id, latitude, longitude, date_time) 
-            VALUES (?, ?, ?, ?)
-        """, (user_id, latitude, longitude, date_time))
-        
-        db.commit()
+            """)
+        cursor.execute(f"""
+                       INSERT OR REPLACE INTO users_locations (user_id, latitude, longitude, date_time) 
+                       VALUES ('{user_id}', '{latitude}', '{longitude}', '{date_time}')
+                       """)
 
-        results = {"processed": "true"}
         
         # Calculate distances between users
         cursor.execute("""
-            SELECT user_id, latitude, longitude 
-            FROM user_locations 
-            WHERE (user_id, date_time) IN (
-                SELECT user_id, MAX(date_time) 
-                FROM user_locations 
-                GROUP BY user_id
-            )
-        """)
+                       SELECT user_id, latitude, longitude
+                       FROM users_locations AS ul
+                       WHERE date_time = (
+                       SELECT MAX(date_time)
+                       FROM users_locations
+                       WHERE user_id = ul.user_id
+                       )
+                       """)
+        
         all_users = cursor.fetchall()
         
         # # Delete existing entries for the current user in near_luvs
-        cursor.execute("DELETE FROM near_luvs WHERE user_id = ?", (session["user_id"],))
-        db.commit()
+        cursor.execute(f"DELETE FROM users_matches WHERE receive_id = '{user_id}'")
+
         # print(all_users)
-        for other_user in all_users:
-            other_id, other_lat, other_lon = other_user
-            if other_id == user_id:
+        for send_user in all_users:
+            # print(send_user)
+            send_id, send_latitude, send_longitude = send_user
+            if send_id == user_id:
                 continue  # Skip calculating distance to self
             
-            distance = geodesic((latitude, longitude), (other_lat, other_lon)).meters
+            distance = geodesic((latitude, longitude), (send_latitude, send_longitude)).meters
             
             # Store the calculated distance in the near_luvs table if less than 10 meters and the other user loves this user
-            if distance < 100:
-                cursor.execute("SELECT * FROM user_luvs WHERE user_id = ? AND luv_id = ?", (other_id, user_id))
-                if cursor.fetchone():
-                    cursor.execute("""
-                        INSERT OR REPLACE INTO near_luvs (user_id, luv_id, distance, date_time)
-                        VALUES (?, ?, ?, ?)
-                    """, (user_id, other_id, distance, date_time))
-            else:
-                # Check if the user-other pair exists in near_luvs
-                cursor.execute("""
-                    SELECT * FROM near_luvs 
-                    WHERE user_id = ? AND luv_id = ?
-                """, (user_id, other_id))
-                if cursor.fetchone():
-                    # If the pair exists, remove it
-                    cursor.execute("""
-                        DELETE FROM near_luvs 
-                        WHERE user_id = ? AND luv_id = ?
-                    """, (user_id, other_id))
+            if distance < DISTANCE:
+                cursor.execute(f"""
+                               SELECT *
+                               FROM users_luvs
+                               WHERE user_id = '{send_id}'
+                               ORDER BY date_time DESC
+                               LIMIT 1;
+                               """)
+                
+                match = cursor.fetchone()
+                if match and match[2] == user_id:
+                    # print(1)
+                    cursor.execute(f"""
+                                   INSERT OR REPLACE INTO users_matches (send_id, receive_id, distance, date_time)
+                                   VALUES ('{send_id}', '{user_id}', '{distance}', '{date_time}')
+                                   """)
+        
+
+        cursor.execute(f"DELETE FROM users_matches WHERE send_id = '{user_id}'")
+
+        cursor.execute(f"SELECT * FROM users_luvs WHERE `user_id` = '{user_id}'")
+        cursor.execute(f"""
+                       SELECT *
+                       FROM users_luvs
+                       WHERE user_id = '{user_id}'
+                       ORDER BY date_time DESC
+                       LIMIT 1;
+                       """)
+        match = cursor.fetchone()
+        if match and match[2] != user_id:
+            receive_id = match[2]
+
+            cursor.execute(f"""
+                           SELECT user_id, latitude, longitude
+                           FROM users_locations
+                           WHERE user_id = '{user_id}'
+                           ORDER BY date_time DESC
+                           LIMIT 1;
+            """)
+            send_id, send_latitude, send_longitude = cursor.fetchone()
+
+            cursor.execute(f"""
+                           SELECT user_id, latitude, longitude
+                           FROM users_locations
+                           WHERE user_id = '{receive_id}'
+                           ORDER BY date_time DESC
+                           LIMIT 1;
+                           """)
+            receive_id, receive_latitude, receive_longitude = cursor.fetchone()
+
+            distance = geodesic((send_latitude, send_longitude), (receive_latitude, receive_longitude)).meters
+            date_time = time.strftime("%Y-%m-%d %H:%M:%S")
+
+            if distance < DISTANCE:
+                # print(2)
+                cursor.execute(f"INSERT OR REPLACE INTO users_matches (send_id, receive_id, distance, date_time) VALUES('{send_id}', '{receive_id}', '{distance}', '{date_time}')")
                     
-            
-        results["distances_calculated"] = "true"
                 
         db.commit()
 
         cursor.close()
         db.close()
 
-        return jsonify(results)
+        return jsonify(True)
 
 
 @app.route("/select", methods=["GET", "POST"])
@@ -240,73 +264,48 @@ def select():
         cursor = db.cursor()
     
         email = request.form.get("email")
-        # first_name = request.form.get("first_name")
-        # last_name = request.form.get("last_name")
-        # dob = request.form.get("dob")
-        # sex = request.form.get("sex")
-        # grade = request.form.get("grade")
-        # type = request.form.get("type")
-        # organization = request.form.get("organization")
+        date_time = time.strftime("%Y-%m-%d %H:%M:%S")
 
         cursor.execute(f"SELECT * FROM users WHERE email = '{email}'")
         if len(cursor.fetchall()) == 0:
             return "email does not exist"
 
         cursor.execute(f"SELECT * FROM users WHERE email = '{email}'")
-        luv = cursor.fetchall()
+        luv = cursor.fetchone()
 
         user_id = session["user_id"]
-        luv_id = luv[0][0]
-        # username = user[0][1]
-        # ser_name = user[0][2]
-
-        cursor.execute(f"SELECT * FROM user_luvs WHERE `user_id` = '{user_id}'")
-
-        if len(cursor.fetchall()) == 0:
-            cursor.execute(f"""INSERT INTO user_luvs (user_id, luv_id) 
-                           VALUES(substr('0000000000' || '{user_id}', -8, 8), substr('0000000000' || '{luv_id}', -8, 8));""")
-        else:
-            cursor.execute(f"""UPDATE user_luvs
-                           SET luv_id = '{luv_id}'
-                           WHERE user_id = '{user_id}'""")
+        luv_id = luv[0]
             
-        cursor.execute(f"SELECT * FROM user_luvs WHERE `user_id` = '{user_id}'")
+        cursor.execute(f"""INSERT OR REPLACE INTO users_luvs (user_id, luv_id, date_time) 
+                       VALUES(SUBSTR('0000000000' || '{user_id}', -8, 8), SUBSTR('0000000000' || '{luv_id}', -8, 8), '{date_time}');""")
+        
 
-        if len(cursor.fetchall()) == 0:
-            cursor.execute(f"""INSERT INTO user_luvs (user_id, luv_id) 
-                           VALUES(substr('0000000000' || '{user_id}', -8, 8), substr('0000000000' || '{luv_id}', -8, 8));""")
-        else:
-            cursor.execute(f"""UPDATE user_luvs
-                           SET luv_id = '{luv_id}'
-                           WHERE user_id = '{user_id}'""")
-            
-        cursor.execute(f"DELETE FROM near_luvs WHERE `luv_id` = '{user_id}'")
-
-        print(user_id)
-        cursor.execute(f"""
-            SELECT user_id, latitude, longitude, date_time
-            FROM user_locations
-            WHERE user_id = '{user_id}'
-            ORDER BY date_time DESC
-            LIMIT 1;
-        """)
-        user = cursor.fetchall()[0]
-        print(user)
+        cursor.execute(f"DELETE FROM users_matches WHERE send_id = '{user_id}'")
 
         cursor.execute(f"""
-            SELECT user_id, latitude, longitude, date_time
-            FROM user_locations
-            WHERE user_id = '{luv_id}'
-            ORDER BY date_time DESC
-            LIMIT 1;
-        """)
-        luv = cursor.fetchall()[0]
+                       SELECT user_id, latitude, longitude
+                       FROM users_locations
+                       WHERE user_id = '{user_id}'
+                       ORDER BY date_time DESC
+                       LIMIT 1;
+                       """)
+        send_id, send_latitude, send_longitude = cursor.fetchone()
 
-        distance = geodesic((user[1], user[2]), (luv[1], luv[2])).meters
-        date_time = time.strftime("%Y-%m-%d %H:%M:%S")
+        cursor.execute(f"""
+                       SELECT user_id, latitude, longitude
+                       FROM users_locations
+                       WHERE user_id = '{luv_id}'
+                       ORDER BY date_time DESC
+                       LIMIT 1;
+                       """)
+        receive_id, receive_latitude, receive_longitude = cursor.fetchone()
 
-        if distance < 100:
-            cursor.execute(f"INSERT INTO near_luvs (user_id, luv_id, distance, date_time) VALUES('{luv_id}', '{user_id}', {distance}, '{date_time}')")
+        distance = geodesic((send_latitude, send_longitude), (receive_latitude, receive_longitude)).meters
+
+        if distance < DISTANCE:
+            # print(3)
+            cursor.execute(f"INSERT OR REPLACE INTO users_matches (send_id, receive_id, distance, date_time) VALUES('{send_id}', '{receive_id}', '{distance}', '{date_time}')")
+
 
         db.commit()
 
@@ -319,31 +318,21 @@ def select():
         return render_template("select.html")
 
 
-@app.route("/get_near_luvs", methods=["GET"])
+@app.route("/get_users_matches", methods=["GET"])
 @login_required
-def get_near_luvs():
+def get_users_matches():
     db = get_db()
         
     cursor = db.cursor()
 
     user_id = session["user_id"]
 
-    cursor.execute(f"""WITH RankedLuvs AS (
-                        SELECT 
-                            user_id, 
-                            luv_id, 
-                            distance,
-                            date_time,
-                            ROW_NUMBER() OVER (PARTITION BY luv_id ORDER BY date_time DESC) AS rn
-                        FROM near_luvs
-                        WHERE user_id = '{user_id}')
-                    SELECT 
-                        user_id, 
-                        luv_id, 
-                        distance,
-                        date_time
-                    FROM RankedLuvs
-                    WHERE rn = 1;""")
+    cursor.execute(f"""
+                   SELECT *
+                   FROM users_matches
+                   WHERE receive_id = '{user_id}'
+                   """)
+    
     results = cursor.fetchall()
 
     cursor.close()
@@ -353,4 +342,4 @@ def get_near_luvs():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=1000, ssl_context='adhoc')
+    app.run(host="0.0.0.0", port=1000, ssl_context="adhoc")

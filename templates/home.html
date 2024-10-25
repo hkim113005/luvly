@@ -27,7 +27,7 @@
 
         window.addEventListener("load", () => {
 			getLocation();
-            getNearLuvs();
+            //getNearLuvs();
 		});
 
         function getLocation() {
@@ -57,7 +57,7 @@
                 success: function(response) {
                     $.ajax({
                         type: "GET",
-                        url: "/get_near_luvs",
+                        url: "/get_users_matches",
                         success: function(data) {
                             document.getElementById("like_count").textContent = data.length.toString();
                             console.log(data);
@@ -74,7 +74,7 @@
         function getNearLuvs() {
             $.ajax({
                 type: "GET",
-                url: "/get_near_luvs",
+                url: "/get_users_matches",
                 success: function(data) {
                     document.getElementById("like_count").textContent = data.length.toString();
                     console.log(data);

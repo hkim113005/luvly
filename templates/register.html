@@ -36,9 +36,6 @@
         <div id="form_box">
             <form action="/sign-up" method="POST">
                     <div id="form_text_box">
-                        <div id="username">
-                            <input id="username_input" autocomplete="off" autofocus name="username" placeholder="Username" type="text" maxlength="8" required>
-                        </div>
                         <div id="email">
                             <input autocomplete="off" autofocus name="email" placeholder="Email" type="email" required>
                         </div>
@@ -65,7 +62,7 @@
             var element = document.getElementById("last_input");
             var height =  element.offsetHeight;
 
-            document.getElementById("form_text_box").style.height = "calc(" + height + "px + 8 * min(40px, 2vw) * 2 / 3)";
+            document.getElementById("form_text_box").style.height = "calc(" + height + "px + 6 * min(40px, 2vw) * 2 / 3)";
 
             document.getElementById("scrollable").style = `
                 overflow: auto;

@@ -154,8 +154,7 @@ select {
     display: block;
 }
 
-
-#username {
+#email {
     position: absolute;
     left: 50%;
     transform: translate(-50%, calc(1 * min(40px, 2vw) * 2 / 3));
@@ -163,18 +162,10 @@ select {
     display: block;
 }
 
-#email {
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%, calc(3 * min(40px, 2vw) * 2 / 3));
-
-    display: block;
-}
-
 #password {
 position: absolute;
     left: 50%;
-    transform: translate(-50%, calc(5 * min(40px, 2vw) * 2 / 3));
+    transform: translate(-50%, calc(3 * min(40px, 2vw) * 2 / 3));
 
     display: block;
 
@@ -183,63 +174,7 @@ position: absolute;
 #password_confirm {
     position: absolute;
     left: 50%;
-    transform: translate(-50%, calc(7 * min(40px, 2vw) * 2 / 3));
-
-    display: block;
-}
-
-#first_name {
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%, calc(9 * min(40px, 2vw) * 2 / 3));
-
-    display: block;
-}
-
-#last_name {
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%, calc(11 * min(40px, 2vw) * 2 / 3));
-
-    display: block;
-}
-
-#dob {
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%, calc(13 * min(40px, 2vw) * 2 / 3));
-
-    display: block;
-}
-
-#sex {
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%, calc(15 * min(40px, 2vw) * 2 / 3));
-
-    display: block;
-}
-
-#organization {
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%, calc(17 * min(40px, 2vw) * 2 / 3));
-
-    display: block;
-}
-
-#type {
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%, calc(19 * min(40px, 2vw) * 2 / 3));
-
-    display: block;
-}
-
-#grade {
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%, calc(21 * min(40px, 2vw) * 2 / 3));
+    transform: translate(-50%, calc(5 * min(40px, 2vw) * 2 / 3));
 
     display: block;
 }

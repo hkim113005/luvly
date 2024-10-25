@@ -4,38 +4,75 @@ db = sqlite3.connect("data.db")
 
 cursor = db.cursor()
 
-# cursor.execute("DROP TABLE IF EXISTS `users`")
-cursor.execute("""CREATE TABLE IF NOT EXISTS `users` (
-               `user_id` char(8) NOT NULL, 
-               `username` varchar(500) DEFAULT NULL, 
-               `full_name` varchar(500) DEFAULT NULL, 
-               `dob` date DEFAULT NULL, 
-               `email` varchar(500) NOT NULL, 
-               `password_hash` text, 
-               PRIMARY KEY (`user_id`))""")
+if True:
+    cursor.execute("DROP TABLE IF EXISTS users")
+    cursor.execute("DROP TABLE IF EXISTS users_locations")
+    cursor.execute("DROP TABLE IF EXISTS users_matches")
+    cursor.execute("DROP TABLE IF EXISTS users_luvs")
 
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS user_locations (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id char(8) NOT NULL,
-    latitude REAL,
-    longitude REAL,
-    date_time TEXT
+
+create_users = """
+CREATE TABLE IF NOT EXISTS users (
+user_id CHAR(8) NOT NULL,
+email VARCHAR(500),
+password_hash TEXT,
+PRIMARY KEY (user_id)
 )
-""")
-# Create a table to store user matches
-# cursor.execute("DROP TABLE IF EXISTS `near_luvs`")
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS near_luvs (
-    user_id char(8) NOT NULL,
-    luv_id char(8) NOT NULL,
-    distance REAL,
-    date_time TEXT
+"""
+cursor.execute(create_users)
+
+
+create_users_locations = """
+CREATE TABLE IF NOT EXISTS users_locations (
+id TEXT PRIMARY KEY,
+user_id CHAR(8) NOT NULL,
+latitude REAL NOT NULL,
+longitude REAL NOT NULL,
+date_time TEXT,
+FOREIGN KEY (user_id) REFERENCES users(user_id)
 )
-""")
+"""
+cursor.execute(create_users_locations)
+
+create_users_locations_trigger = """
+CREATE TRIGGER users_locations_trigger
+AFTER INSERT ON users_locations
+BEGIN
+    UPDATE users_locations SET id = CONCAT(NEW.user_id, '-', NEW.date_time)
+    WHERE user_id = NEW.user_id AND date_time = NEW.date_time;
+END;
+"""
+cursor.execute(create_users_locations_trigger)
 
 
-# cursor.execute("DROP TABLE IF EXISTS `user_luvs`")
-cursor.execute("""CREATE TABLE IF NOT EXISTS `user_luvs` (
-               `user_id` char(8) NOT NULL, 
-               `luv_id` char(8) NOT NULL)""")
+create_users_matches = """
+CREATE TABLE IF NOT EXISTS users_matches (
+id INTEGER PRIMARY KEY,
+send_id CHAR(8) NOT NULL,
+receive_id CHAR(8) NOT NULL,
+distance REAL,
+date_time TEXT,
+FOREIGN KEY (send_id) REFERENCES users(user_id),
+FOREIGN KEY (receive_id) REFERENCES users(user_id)
+)
+"""
+cursor.execute(create_users_matches)
+
+
+create_users_luvs = """
+CREATE TABLE IF NOT EXISTS users_luvs (
+id INTEGER PRIMARY KEY,
+user_id CHAR(8),
+luv_id CHAR(8),
+date_time TEXT,
+FOREIGN KEY (user_id) REFERENCES users(user_id),
+FOREIGN KEY (luv_id) REFERENCES users(user_id)
+)
+"""
+cursor.execute(create_users_luvs)
+
+
+db.commit()
+
+cursor.close()
+db.close()
