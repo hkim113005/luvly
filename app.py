@@ -207,6 +207,20 @@ def update_location():
                         INSERT OR REPLACE INTO near_luvs (user_id, luv_id, distance, date_time)
                         VALUES (?, ?, ?, ?)
                     """, (user_id, other_id, distance, date_time))
+            else:
+                # Check if the user-other pair exists in near_luvs
+                cursor.execute("""
+                    SELECT * FROM near_luvs 
+                    WHERE user_id = ? AND luv_id = ?
+                """, (user_id, other_id))
+                if cursor.fetchone():
+                    # If the pair exists, remove it
+                    cursor.execute("""
+                        DELETE FROM near_luvs 
+                        WHERE user_id = ? AND luv_id = ?
+                    """, (user_id, other_id))
+                    
+            
         results["distances_calculated"] = "true"
                 
         db.commit()
