@@ -191,7 +191,7 @@ def update_location():
         # # Delete existing entries for the current user in near_luvs
         cursor.execute("DELETE FROM near_luvs WHERE user_id = ?", (session["user_id"],))
         db.commit()
-        print(all_users)
+        # print(all_users)
         for other_user in all_users:
             other_id, other_lat, other_lon = other_user
             if other_id == user_id:
@@ -200,7 +200,7 @@ def update_location():
             distance = geodesic((latitude, longitude), (other_lat, other_lon)).meters
             
             # Store the calculated distance in the near_luvs table if less than 10 meters and the other user loves this user
-            if distance < 10:
+            if distance < 100:
                 cursor.execute("SELECT * FROM user_luvs WHERE user_id = ? AND luv_id = ?", (other_id, user_id))
                 if cursor.fetchone():
                     cursor.execute("""

@@ -33,12 +33,10 @@
         function getLocation() {
             var currentPosition;
             if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(saveLocation, error, {enableHighAccuracy: true});
+                navigator.geolocation.watchPosition(saveLocation, error, {enableHighAccuracy: true});
             } else {
                 x.innerHTML = "Geolocation is not supported by this browser.";
             }
-
-            setTimeout(getLocation, 5000);
         }
 
         function saveLocation(position) {
@@ -55,7 +53,17 @@
                 url: "/update_location",
                 data: JSON.stringify(data),
                 contentType: "application/json",
-                dataType: "json"
+                dataType: "json",
+                success: function(response) {
+                    $.ajax({
+                        type: "GET",
+                        url: "/get_near_luvs",
+                        success: function(data) {
+                            document.getElementById("like_count").textContent = data.length.toString();
+                            console.log(data);
+                        }
+                    })
+                }
             });
         }
 
@@ -73,7 +81,7 @@
                 }
             })
 
-            setTimeout(getNearLuvs, 5000);
+            setTimeout(getNearLuvs, 1000);
         }
     </script>
 {% endblock %}
