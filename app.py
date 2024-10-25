@@ -306,7 +306,6 @@ def select():
         date_time = time.strftime("%Y-%m-%d %H:%M:%S")
 
         if distance < 100:
-            print(f"INSERT INTO near_luvs (user_id, luv_id, distance, date_time) VALUES({luv_id}, {user_id}, {distance}, '{date_time}')")
             cursor.execute(f"INSERT INTO near_luvs (user_id, luv_id, distance, date_time) VALUES('{luv_id}', '{user_id}', {distance}, '{date_time}')")
 
         db.commit()
