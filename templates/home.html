@@ -27,7 +27,7 @@
 
         window.addEventListener("load", () => {
 			getLocation();
-            //getNearLuvs();
+            getUserMatches();
 		});
 
         function getLocation() {
@@ -71,7 +71,7 @@
             console.log("ERROR");
         }
 
-        function getNearLuvs() {
+        function getUserMatches() {
             $.ajax({
                 type: "GET",
                 url: "/get_users_matches",
@@ -81,7 +81,7 @@
                 }
             })
 
-            setTimeout(getNearLuvs, 1000);
+            setTimeout(getUserMatches, 1000);
         }
     </script>
 {% endblock %}
