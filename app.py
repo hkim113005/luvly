@@ -129,6 +129,92 @@ def logout():
     return redirect("/")
 
 
+@app.route("/select", methods=["GET", "POST"])
+@login_required
+def select():
+    if request.method == "POST":
+        db = get_db()
+        
+        cursor = db.cursor()
+    
+        email = request.form.get("email")
+        date_time = time.strftime("%Y-%m-%d %H:%M:%S")
+
+        cursor.execute(f"SELECT * FROM users WHERE email = '{email}'")
+        if len(cursor.fetchall()) == 0:
+            return "email does not exist"
+
+        cursor.execute(f"SELECT * FROM users WHERE email = '{email}'")
+        luv = cursor.fetchone()
+
+        user_id = session["user_id"]
+        luv_id = luv[0]
+            
+        cursor.execute(f"""INSERT OR REPLACE INTO users_luvs (user_id, luv_id, date_time) 
+                       VALUES(SUBSTR('0000000000' || '{user_id}', -8, 8), SUBSTR('0000000000' || '{luv_id}', -8, 8), '{date_time}');""")
+        
+
+        cursor.execute(f"DELETE FROM users_matches WHERE send_id = '{user_id}'")
+
+        cursor.execute(f"""
+                       SELECT user_id, latitude, longitude
+                       FROM users_locations
+                       WHERE user_id = '{user_id}'
+                       ORDER BY date_time DESC
+                       LIMIT 1;
+                       """)
+        send_id, send_latitude, send_longitude = cursor.fetchone()
+
+        cursor.execute(f"""
+                       SELECT user_id, latitude, longitude
+                       FROM users_locations
+                       WHERE user_id = '{luv_id}'
+                       ORDER BY date_time DESC
+                       LIMIT 1;
+                       """)
+        receive_id, receive_latitude, receive_longitude = cursor.fetchone()
+
+        distance = geodesic((send_latitude, send_longitude), (receive_latitude, receive_longitude)).meters
+
+        if distance < DISTANCE:
+            # print(3)
+            cursor.execute(f"INSERT OR REPLACE INTO users_matches (send_id, receive_id, distance, date_time) VALUES('{send_id}', '{receive_id}', '{distance}', '{date_time}')")
+
+
+        db.commit()
+
+        cursor.close()
+        db.close()
+
+        return redirect("/")
+
+    else:
+        return render_template("select.html")
+
+
+@app.route("/get_users_matches", methods=["GET"])
+@login_required
+def get_users_matches():
+    db = get_db()
+        
+    cursor = db.cursor()
+
+    user_id = session["user_id"]
+
+    cursor.execute(f"""
+                   SELECT *
+                   FROM users_matches
+                   WHERE receive_id = '{user_id}'
+                   """)
+    
+    results = cursor.fetchall()
+
+    cursor.close()
+    db.close()
+    
+    return results
+
+
 @app.route("/update_location", methods=["POST"])
 @login_required
 def update_location():
@@ -253,92 +339,6 @@ def update_location():
         db.close()
 
         return jsonify(True)
-
-
-@app.route("/select", methods=["GET", "POST"])
-@login_required
-def select():
-    if request.method == "POST":
-        db = get_db()
-        
-        cursor = db.cursor()
-    
-        email = request.form.get("email")
-        date_time = time.strftime("%Y-%m-%d %H:%M:%S")
-
-        cursor.execute(f"SELECT * FROM users WHERE email = '{email}'")
-        if len(cursor.fetchall()) == 0:
-            return "email does not exist"
-
-        cursor.execute(f"SELECT * FROM users WHERE email = '{email}'")
-        luv = cursor.fetchone()
-
-        user_id = session["user_id"]
-        luv_id = luv[0]
-            
-        cursor.execute(f"""INSERT OR REPLACE INTO users_luvs (user_id, luv_id, date_time) 
-                       VALUES(SUBSTR('0000000000' || '{user_id}', -8, 8), SUBSTR('0000000000' || '{luv_id}', -8, 8), '{date_time}');""")
-        
-
-        cursor.execute(f"DELETE FROM users_matches WHERE send_id = '{user_id}'")
-
-        cursor.execute(f"""
-                       SELECT user_id, latitude, longitude
-                       FROM users_locations
-                       WHERE user_id = '{user_id}'
-                       ORDER BY date_time DESC
-                       LIMIT 1;
-                       """)
-        send_id, send_latitude, send_longitude = cursor.fetchone()
-
-        cursor.execute(f"""
-                       SELECT user_id, latitude, longitude
-                       FROM users_locations
-                       WHERE user_id = '{luv_id}'
-                       ORDER BY date_time DESC
-                       LIMIT 1;
-                       """)
-        receive_id, receive_latitude, receive_longitude = cursor.fetchone()
-
-        distance = geodesic((send_latitude, send_longitude), (receive_latitude, receive_longitude)).meters
-
-        if distance < DISTANCE:
-            # print(3)
-            cursor.execute(f"INSERT OR REPLACE INTO users_matches (send_id, receive_id, distance, date_time) VALUES('{send_id}', '{receive_id}', '{distance}', '{date_time}')")
-
-
-        db.commit()
-
-        cursor.close()
-        db.close()
-
-        return redirect("/")
-
-    else:
-        return render_template("select.html")
-
-
-@app.route("/get_users_matches", methods=["GET"])
-@login_required
-def get_users_matches():
-    db = get_db()
-        
-    cursor = db.cursor()
-
-    user_id = session["user_id"]
-
-    cursor.execute(f"""
-                   SELECT *
-                   FROM users_matches
-                   WHERE receive_id = '{user_id}'
-                   """)
-    
-    results = cursor.fetchall()
-
-    cursor.close()
-    db.close()
-    
-    return results
 
 
 if __name__ == "__main__":
